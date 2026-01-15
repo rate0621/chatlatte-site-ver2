@@ -48,30 +48,29 @@ const works = [
 
 export function Works() {
   return (
-    <section id="works" className="py-20 px-6 bg-gradient-to-b from-white to-blue-50">
+    <section id="works" className="py-24 px-6 bg-[#fafaf8]">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 text-center">
-          Works
-        </h2>
-        
-        <p className="text-xl text-slate-600 text-center mb-16">
-          解決してきた課題と成果
+        <p className="text-amber-600 font-medium tracking-wider text-sm mb-4 text-center">
+          WORKS
         </p>
-        
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-16 text-center">
+          解決してきた課題と成果
+        </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:grid-rows-[repeat(2,_auto_auto_auto_auto)] lg:grid-rows-[repeat(2,_auto_auto_auto_auto)]">
           {works.map((work, index) => (
-            <Card key={index} className="border-slate-200 hover:shadow-xl transition-all hover:border-blue-200 overflow-hidden rounded-2xl grid grid-rows-subgrid row-span-4">
-              <CardHeader className="bg-gradient-to-br from-slate-50 to-blue-50 pb-4">
-                <CardTitle className="text-lg leading-snug text-slate-900">
+            <Card key={index} className="border-slate-200/80 bg-white hover:shadow-xl transition-all hover:border-amber-300 overflow-hidden rounded-2xl grid grid-rows-subgrid row-span-4">
+              <CardHeader className="bg-gradient-to-br from-[#1e3a5f] to-[#2d4a6f] pb-4">
+                <CardTitle className="text-lg leading-snug text-white">
                   {work.title}
                 </CardTitle>
               </CardHeader>
 
               {/* 課題 */}
               <div className="flex gap-2 px-6">
-                <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-sm font-semibold text-red-500">課題</div>
+                  <div className="text-sm font-semibold text-rose-500">課題</div>
                   <p className="text-slate-600 text-sm leading-relaxed">
                     {work.challenge}
                   </p>
@@ -91,10 +90,10 @@ export function Works() {
 
               {/* 成果 */}
               <div className="flex gap-2 px-6 pb-6">
-                <Trophy className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                <Trophy className="w-4 h-4 text-[#1e3a5f] flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-sm font-semibold text-blue-500">成果</div>
-                  <div className="text-xl font-bold text-blue-500 mb-1">
+                  <div className="text-sm font-semibold text-[#1e3a5f]">成果</div>
+                  <div className="text-xl font-bold text-[#1e3a5f] mb-1">
                     {work.achievement}
                   </div>
                   <div className="text-sm text-slate-500">

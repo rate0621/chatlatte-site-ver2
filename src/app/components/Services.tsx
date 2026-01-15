@@ -41,30 +41,37 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="py-20 px-6 bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16 text-center">
-          Services
+    <section id="services" className="py-24 px-6 bg-[#1e3a5f] relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
+
+      <div className="max-w-6xl mx-auto relative">
+        <p className="text-amber-400 font-medium tracking-wider text-sm mb-4 text-center">
+          SERVICES
+        </p>
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-16 text-center">
+          できること
         </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <Card key={index} className="border-slate-200 hover:shadow-xl transition-all hover:border-blue-200 rounded-2xl">
+              <Card key={index} className="bg-white/10 backdrop-blur border-white/20 hover:bg-white/15 transition-all rounded-2xl">
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-2">
-                    <div className="p-3 bg-blue-50 rounded-xl">
-                      <Icon className="w-6 h-6 text-blue-500" />
+                    <div className="p-3 bg-amber-400/20 rounded-xl">
+                      <Icon className="w-6 h-6 text-amber-400" />
                     </div>
-                    <CardTitle className="text-xl">{service.title}</CardTitle>
+                    <CardTitle className="text-xl text-white">{service.title}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 text-slate-600">
+                  <ul className="space-y-3 text-slate-200">
                     {service.items.map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <span className="text-blue-500 mt-1">•</span>
+                        <span className="text-amber-400 mt-1">•</span>
                         <span>{item}</span>
                       </li>
                     ))}

@@ -21,16 +21,19 @@ const skillCategories = [
 
 export function Skills() {
   return (
-    <section id="skills" className="py-20 px-6 bg-gradient-to-b from-blue-50 to-slate-50">
+    <section id="skills" className="py-24 px-6 bg-white">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16 text-center">
-          Skills
+        <p className="text-amber-600 font-medium tracking-wider text-sm mb-4 text-center">
+          SKILLS
+        </p>
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-16 text-center">
+          スキルセット
         </h2>
-        
+
         <div className="space-y-10">
           {skillCategories.map((category, index) => (
             <div key={index} className="space-y-4">
-              <h3 className="text-xl font-semibold text-slate-700">
+              <h3 className="text-xl font-semibold text-[#1e3a5f]">
                 {category.category}
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -38,7 +41,7 @@ export function Skills() {
                   <Badge
                     key={idx}
                     variant="secondary"
-                    className="px-4 py-2 text-base bg-white border border-slate-300 text-slate-700 hover:bg-blue-50 hover:border-blue-300 transition-colors rounded-full shadow-sm"
+                    className="px-4 py-2 text-base bg-[#fafaf8] border border-slate-200 text-slate-700 hover:bg-amber-50 hover:border-amber-300 transition-colors rounded-full"
                   >
                     {skill}
                   </Badge>

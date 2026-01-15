@@ -42,18 +42,21 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 px-6 bg-gradient-to-b from-white to-blue-50">
+    <section id="contact" className="py-24 px-6 bg-white">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 text-center">
-          Contact
+        <p className="text-amber-600 font-medium tracking-wider text-sm mb-4 text-center">
+          CONTACT
+        </p>
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-6 text-center">
+          お問い合わせ
         </h2>
-        
+
         <p className="text-lg text-slate-600 text-center mb-12 leading-relaxed">
           「こんなこと頼めるのかな？」という段階でも大丈夫です。<br />
           課題の整理からお手伝いできますので、お気軽にご連絡ください。
         </p>
-        
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
+
+        <form onSubmit={handleSubmit} className="space-y-6 bg-[#fafaf8] p-8 rounded-2xl border border-slate-200">
           <div className="space-y-2">
             <Label htmlFor="name">
               お名前 <span className="text-red-500">*</span>
@@ -110,7 +113,7 @@ export function Contact() {
           <Button
             type="submit"
             size="lg"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-md hover:shadow-lg transition-all"
+            className="w-full bg-[#1e3a5f] hover:bg-[#2d4a6f] text-white rounded-full shadow-md hover:shadow-lg transition-all"
           >
             送信する
           </Button>

@@ -1,5 +1,4 @@
 import { MessageCircle, Target, RefreshCw, Handshake } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/app/components/ui/card";
 
 const reasons = [
   {
@@ -30,31 +29,34 @@ const reasons = [
 
 export function WhyMe() {
   return (
-    <section id="why-me" className="py-20 px-6 bg-gradient-to-b from-slate-50 to-white">
+    <section id="why-me" className="py-24 px-6 bg-[#fafaf8]">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16 text-center">
-          Why Me
+        <p className="text-amber-600 font-medium tracking-wider text-sm mb-4 text-center">
+          WHY ME
+        </p>
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-16 text-center">
+          選ばれる理由
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {reasons.map((reason, index) => {
             const Icon = reason.icon;
             return (
-              <Card key={index} className="border-slate-200 hover:shadow-xl transition-all text-center rounded-2xl hover:border-blue-200">
-                <CardHeader>
-                  <div className="flex justify-center mb-4">
-                    <div className="p-4 bg-blue-50 rounded-full">
-                      <Icon className="w-8 h-8 text-blue-500" />
-                    </div>
+              <div key={index} className="flex gap-5">
+                <div className="flex-shrink-0">
+                  <div className="p-4 bg-amber-100 rounded-2xl">
+                    <Icon className="w-7 h-7 text-amber-600" />
                   </div>
-                  <CardTitle className="text-lg leading-snug">{reason.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#1e3a5f] mb-2">
+                    {reason.title}
+                  </h3>
                   <p className="text-slate-600 leading-relaxed">
                     {reason.description}
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
