@@ -15,7 +15,7 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("必須項目を入力してください");
@@ -31,7 +31,7 @@ export function Contact() {
 
     // Success message (mock submission)
     toast.success("お問い合わせを受け付けました。ありがとうございます！");
-    
+
     // Reset form
     setFormData({
       name: "",
@@ -42,24 +42,21 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 px-6 bg-white">
+    <section id="contact" className="py-24 px-6 bg-[#f7fafa]">
       <div className="max-w-2xl mx-auto">
-        <p className="text-amber-600 font-medium tracking-wider text-sm mb-4 text-center">
-          CONTACT
-        </p>
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-6 text-center">
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#4a5568] mb-6 text-center">
           お問い合わせ
         </h2>
 
-        <p className="text-lg text-slate-600 text-center mb-12 leading-relaxed">
+        <p className="text-lg text-[#6b7280] text-center mb-12 leading-relaxed">
           「こんなこと頼めるのかな？」という段階でも大丈夫です。<br />
           課題の整理からお手伝いできますので、お気軽にご連絡ください。
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-[#fafaf8] p-8 rounded-2xl border border-slate-200">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-2xl border border-[#e0eeec]">
           <div className="space-y-2">
             <Label htmlFor="name">
-              お名前 <span className="text-red-500">*</span>
+              お名前 <span className="text-[#d09999]">*</span>
             </Label>
             <Input
               id="name"
@@ -67,7 +64,7 @@ export function Contact() {
               required
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full rounded-lg"
+              className="w-full rounded-lg border-[#e0eeec] focus:border-[#5BBFB3] focus:ring-[#5BBFB3]"
             />
           </div>
 
@@ -78,13 +75,13 @@ export function Contact() {
               type="text"
               value={formData.company}
               onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className="w-full rounded-lg"
+              className="w-full rounded-lg border-[#e0eeec] focus:border-[#5BBFB3] focus:ring-[#5BBFB3]"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">
-              メールアドレス <span className="text-red-500">*</span>
+              メールアドレス <span className="text-[#d09999]">*</span>
             </Label>
             <Input
               id="email"
@@ -92,13 +89,13 @@ export function Contact() {
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full rounded-lg"
+              className="w-full rounded-lg border-[#e0eeec] focus:border-[#5BBFB3] focus:ring-[#5BBFB3]"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="message">
-              お問い合わせ内容 <span className="text-red-500">*</span>
+              お問い合わせ内容 <span className="text-[#d09999]">*</span>
             </Label>
             <Textarea
               id="message"
@@ -106,14 +103,14 @@ export function Contact() {
               rows={6}
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="w-full resize-none rounded-lg"
+              className="w-full resize-none rounded-lg border-[#e0eeec] focus:border-[#5BBFB3] focus:ring-[#5BBFB3]"
             />
           </div>
 
           <Button
             type="submit"
             size="lg"
-            className="w-full bg-[#1e3a5f] hover:bg-[#2d4a6f] text-white rounded-full shadow-md hover:shadow-lg transition-all"
+            className="w-full bg-[#5BBFB3] hover:bg-[#4AA99E] text-white rounded-full shadow-md hover:shadow-lg transition-all"
           >
             送信する
           </Button>

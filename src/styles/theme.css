@@ -5,11 +5,12 @@
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
 
-  /* Custom brand colors */
-  --brand-primary: #1e3a5f;
-  --brand-accent: #f59e0b;
-  --brand-accent-light: #fef3c7;
-  --font-display: 'Zen Kaku Gothic New', sans-serif;
+  /* Custom brand colors - chatlatte mint */
+  --brand-primary: #4a5568;
+  --brand-accent: #5BBFB3;
+  --brand-accent-light: #e8f5f3;
+  --brand-warm: #9a8b7a;
+  --font-display: 'Zen Maru Gothic', sans-serif;
   --card: #ffffff;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);

@@ -5,7 +5,7 @@ const reasons = [
     icon: MessageCircle,
     title: "非エンジニア組織でも話が通じる",
     description:
-      "専門用語を使わず、誰にでもわかる言葉で伝えます。「小難しいことを言う人種」ではなく、課題解決のパートナーとして伴走します。",
+      "専門用語を使わず、誰にでもわかる言葉で伝えます。「エンジニア＝小難しいことを言う人」ではなく、課題解決のパートナーとして伴走します。",
   },
   {
     icon: Target,
@@ -29,13 +29,10 @@ const reasons = [
 
 export function WhyMe() {
   return (
-    <section id="why-me" className="py-24 px-6 bg-[#fafaf8]">
+    <section id="why-me" className="py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        <p className="text-amber-600 font-medium tracking-wider text-sm mb-4 text-center">
-          WHY ME
-        </p>
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-16 text-center">
-          選ばれる理由
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#4a5568] mb-16 text-center">
+          選ばれる理由（多分)
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -44,15 +41,15 @@ export function WhyMe() {
             return (
               <div key={index} className="flex gap-5">
                 <div className="flex-shrink-0">
-                  <div className="p-4 bg-amber-100 rounded-2xl">
-                    <Icon className="w-7 h-7 text-amber-600" />
+                  <div className="p-4 bg-[#e8f5f3] rounded-2xl">
+                    <Icon className="w-7 h-7 text-[#5BBFB3]" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#1e3a5f] mb-2">
+                  <h3 className="text-lg font-bold text-[#4a5568] mb-2">
                     {reason.title}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-[#6b7280] leading-relaxed">
                     {reason.description}
                   </p>
                 </div>

@@ -76,7 +76,7 @@
 
 /* Marker highlight effect */
 .marker-highlight {
-  background: linear-gradient(transparent 60%, var(--brand-accent-light) 60%);
+  background: linear-gradient(transparent 60%, #d4f0ec 60%);
   padding: 0 4px;
 }
 
