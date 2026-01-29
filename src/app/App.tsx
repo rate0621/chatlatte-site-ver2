@@ -1,6 +1,7 @@
 import { Toaster } from "@/app/components/ui/sonner";
 import { Hero } from "@/app/components/Hero";
 import { About } from "@/app/components/About";
+import { Strengths } from "@/app/components/Strengths";
 import { Services } from "@/app/components/Services";
 import { Works } from "@/app/components/Works";
 import { Skills } from "@/app/components/Skills";
@@ -13,6 +14,7 @@ export default function App() {
     <div className="min-h-screen" style={{ fontFamily: "'Noto Sans JP', sans-serif" }}>
       <Hero />
       <About />
+      <Strengths />
       <Services />
       <Works />
       <Skills />
