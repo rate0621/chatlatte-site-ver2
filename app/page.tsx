@@ -7,7 +7,7 @@ import { Skills } from "@/app/components/Skills";
 import { WhyMe } from "@/app/components/WhyMe";
 import { Contact } from "@/app/components/Contact";
 
-export function HomePage() {
+export default function HomePage() {
   return (
     <>
       <Hero />

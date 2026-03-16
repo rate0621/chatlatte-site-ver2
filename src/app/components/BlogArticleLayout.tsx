@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface RelatedArticle {
   readonly slug: string;
@@ -33,7 +33,7 @@ export function BlogArticleLayout({ title, date, children, relatedArticles }: Bl
             {relatedArticles.map((article) => (
               <li key={article.slug}>
                 <Link
-                  to={`/blog/${article.slug}`}
+                  href={`/blog/${article.slug}`}
                   className="text-[#5BBFB3] hover:underline"
                 >
                   {article.title}
@@ -45,7 +45,7 @@ export function BlogArticleLayout({ title, date, children, relatedArticles }: Bl
       )}
 
       <div className="mt-12">
-        <Link to="/blog" className="text-[#5BBFB3] hover:underline text-sm">
+        <Link href="/blog" className="text-[#5BBFB3] hover:underline text-sm">
           &larr; ブログ一覧に戻る
         </Link>
       </div>

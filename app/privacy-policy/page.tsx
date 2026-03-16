@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-export function PrivacyPolicyPage() {
+export const metadata: Metadata = {
+  title: "プライバシーポリシー",
+};
+
+export default function PrivacyPolicyPage() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">プライバシーポリシー</h1>
@@ -9,6 +14,15 @@ export function PrivacyPolicyPage() {
         <p>
           chatlatte（以下「当サイト」）は、ユーザーの個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
         </p>
+
+        <section>
+          <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">運営者情報</h2>
+          <ul className="list-none space-y-2">
+            <li><span className="font-medium text-gray-800">運営：</span>chatlatte</li>
+            <li><span className="font-medium text-gray-800">所在地：</span>山形県</li>
+            <li><span className="font-medium text-gray-800">お問い合わせ：</span><Link href="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link></li>
+          </ul>
+        </section>
 
         <section>
           <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">1. 個人情報の収集について</h2>
@@ -71,7 +85,7 @@ export function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">7. お問い合わせ</h2>
           <p>
             当サイトの個人情報の取り扱いに関するお問い合わせは、
-            <Link to="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link>
+            <Link href="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link>
             よりご連絡ください。
           </p>
         </section>

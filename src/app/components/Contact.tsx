@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
@@ -30,7 +32,7 @@ export function Contact() {
       return;
     }
 
-    const webhookUrl = import.meta.env.VITE_SLACK_WEBHOOK_URL;
+    const webhookUrl = process.env.NEXT_PUBLIC_SLACK_WEBHOOK_URL;
     if (!webhookUrl) {
       toast.error("送信設定が完了していません");
       return;

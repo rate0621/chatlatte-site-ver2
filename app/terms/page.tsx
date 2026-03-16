@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-export function TermsPage() {
+export const metadata: Metadata = {
+  title: "利用規約",
+};
+
+export default function TermsPage() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">利用規約</h1>
@@ -72,7 +77,7 @@ export function TermsPage() {
           <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">8. お問い合わせ</h2>
           <p>
             本規約に関するお問い合わせは、
-            <Link to="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link>
+            <Link href="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link>
             よりご連絡ください。
           </p>
         </section>

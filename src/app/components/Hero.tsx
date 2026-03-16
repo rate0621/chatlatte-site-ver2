@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 

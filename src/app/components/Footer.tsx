@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -12,13 +12,13 @@ export function Footer() {
             </p>
           </div>
           <nav className="flex flex-col sm:flex-row gap-6 text-sm">
-            <Link to="/blog" className="text-[#a0aec0] hover:text-white transition-colors">
+            <Link href="/blog" className="text-[#a0aec0] hover:text-white transition-colors">
               ブログ
             </Link>
-            <Link to="/privacy-policy" className="text-[#a0aec0] hover:text-white transition-colors">
+            <Link href="/privacy-policy" className="text-[#a0aec0] hover:text-white transition-colors">
               プライバシーポリシー
             </Link>
-            <Link to="/terms" className="text-[#a0aec0] hover:text-white transition-colors">
+            <Link href="/terms" className="text-[#a0aec0] hover:text-white transition-colors">
               利用規約
             </Link>
           </nav>
