@@ -2,5 +2,5 @@
 module.exports = {
   siteUrl: "https://www.chatlatte.com",
   generateRobotsTxt: true,
-  outDir: "./out",
+  outDir: "./dist",
 };
