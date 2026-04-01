@@ -17,12 +17,18 @@ export type Tag = {
   readonly name: string;
 } & MicroCMSListContent;
 
+// カテゴリの型
+export type Category = {
+  readonly name: string;
+} & MicroCMSListContent;
+
 // ブログ記事の型
 export type Blog = {
   readonly title: string;
   readonly content: string;
   readonly eyecatch?: MicroCMSImage;
   readonly tag?: readonly Tag[];
+  readonly category?: Category | null;
   readonly description?: string;
 } & MicroCMSListContent;
 

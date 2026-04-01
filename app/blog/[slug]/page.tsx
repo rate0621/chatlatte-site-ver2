@@ -1,49 +1,17 @@
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { getBlogList, getBlogDetail } from "@/lib/microcms";
-import { blogPosts } from "@/app/pages/blogData";
-import { GtmGuidePage } from "@/app/pages/blog/GtmGuidePage";
-import { Ga4SetupPage } from "@/app/pages/blog/Ga4SetupPage";
-import { DxForSmallBusinessPage } from "@/app/pages/blog/DxForSmallBusinessPage";
-import { NoCodeToolsPage } from "@/app/pages/blog/NoCodeToolsPage";
-import { WebsiteImprovementPage } from "@/app/pages/blog/WebsiteImprovementPage";
-import { MarketingFoundationPage } from "@/app/pages/blog/MarketingFoundationPage";
-import { AiBusinessToolsPage } from "@/app/pages/blog/AiBusinessToolsPage";
-import { SqlBasicsPage } from "@/app/pages/blog/SqlBasicsPage";
-import { SlackTipsPage } from "@/app/pages/blog/SlackTipsPage";
-import { ProjectManagementPage } from "@/app/pages/blog/ProjectManagementPage";
-import { SpreadsheetTipsPage } from "@/app/pages/blog/SpreadsheetTipsPage";
-import { AutomationStartPage } from "@/app/pages/blog/AutomationStartPage";
+import { expandAmazonLinks } from "@/lib/expandAmazonLinks";
 import type { Metadata } from "next";
 
-const staticArticles: Record<string, React.ComponentType> = {
-  "gtm-guide": GtmGuidePage,
-  "ga4-setup": Ga4SetupPage,
-  "dx-for-small-business": DxForSmallBusinessPage,
-  "no-code-tools": NoCodeToolsPage,
-  "website-improvement": WebsiteImprovementPage,
-  "marketing-foundation": MarketingFoundationPage,
-  "ai-business-tools": AiBusinessToolsPage,
-  "sql-basics": SqlBasicsPage,
-  "slack-tips": SlackTipsPage,
-  "project-management": ProjectManagementPage,
-  "spreadsheet-tips": SpreadsheetTipsPage,
-  "automation-start": AutomationStartPage,
-};
-
 export async function generateStaticParams() {
-  const staticSlugs = blogPosts.map((post) => ({ slug: post.slug }));
-
-  let cmsSlugs: { slug: string }[] = [];
   try {
     const res = await getBlogList({ limit: 100 });
-    cmsSlugs = res.contents.map((post) => ({ slug: post.id }));
+    return res.contents.map((post) => ({ slug: post.id }));
   } catch (err) {
     console.error("microCMS記事のslug取得に失敗:", err);
+    return [];
   }
-
-  return [...staticSlugs, ...cmsSlugs];
 }
 
 export async function generateMetadata({
@@ -53,16 +21,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  // 静的記事のメタデータ
-  const staticPost = blogPosts.find((p) => p.slug === slug);
-  if (staticPost) {
-    return {
-      title: staticPost.title,
-      description: staticPost.summary,
-    };
-  }
-
-  // microCMS記事のメタデータ
   try {
     const blog = await getBlogDetail(slug);
     return {
@@ -83,19 +41,14 @@ export default async function BlogDetailPage({
 }) {
   const { slug } = await params;
 
-  // 静的記事の場合
-  const StaticComponent = staticArticles[slug];
-  if (StaticComponent) {
-    return <StaticComponent />;
-  }
-
-  // microCMS記事の場合
   let blog;
   try {
     blog = await getBlogDetail(slug);
   } catch {
     notFound();
   }
+
+  const content = await expandAmazonLinks(blog.content);
 
   const publishedAt = blog.publishedAt
     ? new Date(blog.publishedAt).toLocaleDateString("ja-JP")
@@ -109,14 +62,11 @@ export default async function BlogDetailPage({
             {publishedAt && (
               <time className="text-sm text-gray-500">{publishedAt}</time>
             )}
-            {blog.tag?.map((t) => (
-              <span
-                key={t.id}
-                className="text-xs bg-[#5BBFB3]/10 text-[#5BBFB3] px-2 py-0.5 rounded-full font-medium"
-              >
-                {t.name}
+            {blog.category && (
+              <span className="text-xs bg-[#5BBFB3]/10 text-[#5BBFB3] px-2 py-0.5 rounded-full font-medium">
+                {blog.category.name}
               </span>
-            ))}
+            )}
           </div>
           <h1 className="text-3xl font-bold text-gray-800 leading-tight">{blog.title}</h1>
         </header>
@@ -144,7 +94,7 @@ export default async function BlogDetailPage({
             prose-img:rounded-lg prose-img:my-6
             prose-strong:text-gray-700 prose-strong:font-semibold
             [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
+          dangerouslySetInnerHTML={{ __html: content }}
         />
       </article>
 
