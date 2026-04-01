@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getBlogList, getBlogDetail } from "@/lib/microcms";
-import { expandAmazonLinks } from "@/lib/expandAmazonLinks";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -48,8 +47,6 @@ export default async function BlogDetailPage({
     notFound();
   }
 
-  const content = await expandAmazonLinks(blog.content);
-
   const publishedAt = blog.publishedAt
     ? new Date(blog.publishedAt).toLocaleDateString("ja-JP")
     : "";
@@ -94,7 +91,7 @@ export default async function BlogDetailPage({
             prose-img:rounded-lg prose-img:my-6
             prose-strong:text-gray-700 prose-strong:font-semibold
             [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4"
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: blog.content }}
         />
       </article>
 
