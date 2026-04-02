@@ -22,9 +22,25 @@ export async function generateMetadata({
 
   try {
     const blog = await getBlogDetail(slug);
+    const description = blog.description ?? "";
+    const images = blog.eyecatch ? [{ url: blog.eyecatch.url, width: blog.eyecatch.width, height: blog.eyecatch.height }] : [];
+
     return {
       title: blog.title,
-      description: blog.description ?? "",
+      description,
+      openGraph: {
+        title: blog.title,
+        description,
+        type: "article",
+        publishedTime: blog.publishedAt ?? undefined,
+        ...(images.length > 0 && { images }),
+      },
+      twitter: {
+        card: blog.eyecatch ? "summary_large_image" : "summary",
+        title: blog.title,
+        description,
+        ...(blog.eyecatch && { images: [blog.eyecatch.url] }),
+      },
     };
   } catch {
     return {
