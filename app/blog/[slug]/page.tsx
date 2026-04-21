@@ -66,14 +66,60 @@ export default async function BlogDetailPage({
   const publishedAt = blog.publishedAt
     ? new Date(blog.publishedAt).toLocaleDateString("ja-JP")
     : "";
+  const publishedAtIso = blog.publishedAt
+    ? new Date(blog.publishedAt).toISOString().slice(0, 10)
+    : "";
+
+  const hasAffiliateLink = /amzn\.to|amazon\.co\.jp|amazon\.com|rakuten\.co\.jp|a8\.net/.test(
+    blog.content
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog.title,
+    description: blog.description ?? "",
+    image: blog.eyecatch?.url,
+    datePublished: blog.publishedAt,
+    dateModified: blog.updatedAt ?? blog.publishedAt,
+    author: {
+      "@type": "Person",
+      name: "chatlatte",
+      url: "https://www.chatlatte.com/author/chatlatte",
+      jobTitle: "テクニカルディレクター",
+      description:
+        "エンジニア歴10年以上。うち5年はソーシャルゲーム会社でデータアナリスト。現在はDX推進・マーケティング基盤構築・業務効率化を支援。",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "chatlatte",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.chatlatte.com/chatlatte_logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.chatlatte.com/blog/${slug}`,
+    },
+  };
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article>
         <header className="mb-10">
           <div className="flex items-center gap-3 mb-2">
             {publishedAt && (
-              <time className="text-sm text-gray-500">{publishedAt}</time>
+              <time
+                dateTime={publishedAtIso}
+                className="text-sm text-gray-500"
+              >
+                公開日：{publishedAt}
+              </time>
             )}
             {blog.category && (
               <span className="text-xs bg-[#5BBFB3]/10 text-[#5BBFB3] px-2 py-0.5 rounded-full font-medium">
@@ -82,6 +128,38 @@ export default async function BlogDetailPage({
             )}
           </div>
           <h1 className="text-3xl font-bold text-gray-800 leading-tight">{blog.title}</h1>
+          <div className="flex items-center gap-2 mt-4 text-sm text-gray-600">
+            <img
+              src="/chatlatte_logo.png"
+              alt=""
+              aria-hidden="true"
+              className="w-7 h-7 rounded-full bg-white border border-gray-200 p-1 object-contain"
+            />
+            <span className="text-gray-500">文：</span>
+            <Link
+              href="/author/chatlatte"
+              rel="author"
+              className="font-medium text-gray-800 hover:text-[#5BBFB3] transition-colors"
+            >
+              chatlatte
+            </Link>
+            <a
+              href="https://x.com/chatrate0621"
+              target="_blank"
+              rel="noopener noreferrer me"
+              aria-label="X (Twitter) @chatrate0621"
+              className="text-gray-400 hover:text-gray-800 transition-colors"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+                className="w-4 h-4"
+              >
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+          </div>
         </header>
 
         {blog.eyecatch && (
@@ -92,6 +170,13 @@ export default async function BlogDetailPage({
             height={blog.eyecatch.height}
             className="w-full rounded-lg mb-10 object-cover max-h-96"
           />
+        )}
+
+        {hasAffiliateLink && (
+          <p className="mb-8 px-4 py-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-md text-xs leading-relaxed">
+            <span className="font-semibold">[PR]</span>{" "}
+            本記事にはアフィリエイトリンクが含まれています。リンク経由で購入された場合、運営者が紹介料を受け取ることがあります。
+          </p>
         )}
 
         <div
@@ -109,6 +194,48 @@ export default async function BlogDetailPage({
             [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4"
           dangerouslySetInnerHTML={{ __html: blog.content }}
         />
+
+        <aside className="mt-16 border-t border-gray-200 pt-8">
+          <div className="flex items-start gap-4 bg-[#f7fafa] rounded-lg p-6">
+            <img
+              src="/chatlatte_logo.png"
+              alt="chatlatte"
+              className="w-16 h-16 rounded-full bg-white p-2 shrink-0 object-contain"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-gray-500 mb-1">この記事を書いた人</p>
+              <p className="font-bold text-gray-800 mb-2">chatlatte</p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                エンジニア歴10年以上。うち5年はソーシャルゲーム会社でデータアナリストとして従事し、KPI設計・SQL・BIツール活用による意思決定支援を担当。現在はテクニカルディレクターとしてDX推進・マーケティング基盤構築・業務効率化を支援。
+              </p>
+              <div className="flex items-center gap-4 mt-3">
+                <Link
+                  href="/author/chatlatte"
+                  className="text-sm text-[#5BBFB3] hover:underline inline-block"
+                >
+                  プロフィールを見る &rarr;
+                </Link>
+                <a
+                  href="https://x.com/chatrate0621"
+                  target="_blank"
+                  rel="noopener noreferrer me"
+                  aria-label="X (Twitter) @chatrate0621"
+                  className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className="w-4 h-4"
+                  >
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                  <span>@chatrate0621</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
       </article>
 
       <div className="mt-12">
