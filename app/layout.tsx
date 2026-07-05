@@ -67,6 +67,12 @@ export default function RootLayout({
     <html lang="ja">
       <body style={{ fontFamily: "'Noto Sans JP', sans-serif" }}>
         <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7967054821483695"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script
           id="gtm"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{

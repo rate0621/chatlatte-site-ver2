@@ -29,7 +29,3 @@ npm-debug.log*
 .cache
 
 PLAN.md
-
-# next-sitemap生成物
-public/sitemap*.xml
-public/robots.txt
