@@ -64,55 +64,23 @@ export function Contact() {
       return;
     }
 
-    const webhookUrl = process.env.NEXT_PUBLIC_SLACK_WEBHOOK_URL;
-    if (!webhookUrl) {
-      toast.error("送信設定が完了していません");
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
-      const slackMessage = {
-        blocks: [
-          {
-            type: "header",
-            text: {
-              type: "plain_text",
-              text: "📩 新しいご相談",
-              emoji: true,
-            },
-          },
-          {
-            type: "section",
-            fields: [
-              { type: "mrkdwn", text: `*お名前*\n${formData.name}` },
-              { type: "mrkdwn", text: `*会社名*\n${formData.company || "（未入力）"}` },
-            ],
-          },
-          {
-            type: "section",
-            fields: [
-              { type: "mrkdwn", text: `*メールアドレス*\n${formData.email}` },
-            ],
-          },
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: `*ご相談内容*\n${formData.message}`,
-            },
-          },
-        ],
-      };
-
-      const response = await fetch(webhookUrl, {
+      const response = await fetch("/api/contact", {
         method: "POST",
-        body: JSON.stringify(slackMessage),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, website: honeypot }),
       });
 
-      if (!response.ok) {
-        throw new Error("送信に失敗しました");
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
+      if (!response.ok || !result.success) {
+        toast.error(result.error ?? "送信に失敗しました。時間をおいて再度お試しください。");
+        return;
       }
 
       toast.success("受け付けました。1営業日以内にメールでご連絡します！");
