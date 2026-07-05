@@ -162,13 +162,13 @@ export default function AuthorPage() {
           {expertise.map((area, i) => (
             <div
               key={i}
-              className="bg-[#f7fafa] rounded-lg p-5 border border-[#e0eeec]"
+              className="bg-[#FAF6EF] rounded-lg p-5 border border-[#E4D6C3]"
             >
               <h3 className="font-bold text-gray-800 mb-3">{area.title}</h3>
               <ul className="space-y-1 text-sm text-gray-600">
                 {area.items.map((item, j) => (
                   <li key={j} className="flex items-start gap-2">
-                    <span className="text-[#5BBFB3] mt-1">•</span>
+                    <span className="text-[#B37A4C] mt-1">•</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -184,7 +184,7 @@ export default function AuthorPage() {
         </h2>
         <ul className="space-y-3 text-gray-700">
           <li>
-            <Link href="/#contact" className="text-[#5BBFB3] hover:underline">
+            <Link href="/#contact" className="text-[#B37A4C] hover:underline">
               お問い合わせフォーム
             </Link>
           </li>
@@ -193,13 +193,13 @@ export default function AuthorPage() {
               href="https://x.com/chatrate0621"
               target="_blank"
               rel="noopener noreferrer me"
-              className="text-[#5BBFB3] hover:underline"
+              className="text-[#B37A4C] hover:underline"
             >
               X（@chatrate0621）
             </a>
           </li>
           <li>
-            <Link href="/blog" className="text-[#5BBFB3] hover:underline">
+            <Link href="/blog" className="text-[#B37A4C] hover:underline">
               ブログ記事一覧
             </Link>
           </li>
@@ -207,7 +207,7 @@ export default function AuthorPage() {
       </section>
 
       <div className="mt-12 text-center">
-        <Link href="/blog" className="text-[#5BBFB3] hover:underline text-sm">
+        <Link href="/blog" className="text-[#B37A4C] hover:underline text-sm">
           &larr; ブログ一覧に戻る
         </Link>
       </div>

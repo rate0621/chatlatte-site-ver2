@@ -34,7 +34,7 @@ export function BlogArticleLayout({ title, date, children, relatedArticles }: Bl
               <li key={article.slug}>
                 <Link
                   href={`/blog/${article.slug}`}
-                  className="text-[#5BBFB3] hover:underline"
+                  className="text-[#B37A4C] hover:underline"
                 >
                   {article.title}
                 </Link>
@@ -45,7 +45,7 @@ export function BlogArticleLayout({ title, date, children, relatedArticles }: Bl
       )}
 
       <div className="mt-12">
-        <Link href="/blog" className="text-[#5BBFB3] hover:underline text-sm">
+        <Link href="/blog" className="text-[#B37A4C] hover:underline text-sm">
           &larr; ブログ一覧に戻る
         </Link>
       </div>

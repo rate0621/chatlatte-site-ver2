@@ -26,7 +26,7 @@ export function BlogTabs({ cmsBlogs, categories }: BlogTabsProps) {
           href="/blog"
           className={`shrink-0 px-5 py-2.5 text-sm font-medium transition-colors cursor-pointer relative -mb-px ${
             currentCategory === ""
-              ? "text-[#5BBFB3] border-b-2 border-[#5BBFB3]"
+              ? "text-[#B37A4C] border-b-2 border-[#B37A4C]"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -38,7 +38,7 @@ export function BlogTabs({ cmsBlogs, categories }: BlogTabsProps) {
             href={`/blog?category=${cat.id}`}
             className={`shrink-0 px-5 py-2.5 text-sm font-medium transition-colors cursor-pointer relative -mb-px ${
               currentCategory === cat.id
-                ? "text-[#5BBFB3] border-b-2 border-[#5BBFB3]"
+                ? "text-[#B37A4C] border-b-2 border-[#B37A4C]"
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
@@ -59,13 +59,13 @@ export function BlogTabs({ cmsBlogs, categories }: BlogTabsProps) {
                   </time>
                 )}
                 {post.category && (
-                  <span className="text-xs bg-[#5BBFB3]/10 text-[#5BBFB3] px-2 py-0.5 rounded-full font-medium">
+                  <span className="text-xs bg-[#B37A4C]/10 text-[#B37A4C] px-2 py-0.5 rounded-full font-medium">
                     {post.category.name}
                   </span>
                 )}
               </div>
               <Link href={`/blog/${post.id}`} className="group">
-                <h2 className="text-xl font-semibold text-gray-800 group-hover:text-[#5BBFB3] transition-colors mb-2">
+                <h2 className="text-xl font-semibold text-gray-800 group-hover:text-[#B37A4C] transition-colors mb-2">
                   {post.title}
                 </h2>
                 {post.description && (

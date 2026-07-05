@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
           <ul className="list-none space-y-2">
             <li><span className="font-medium text-gray-800">運営：</span>chatlatte</li>
             <li><span className="font-medium text-gray-800">所在地：</span>山形県</li>
-            <li><span className="font-medium text-gray-800">お問い合わせ：</span><Link href="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link></li>
+            <li><span className="font-medium text-gray-800">お問い合わせ：</span><Link href="/#contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link></li>
           </ul>
         </section>
 
@@ -50,7 +50,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <p className="mt-3">
             この機能はCookieを無効にすることで収集を拒否することができますので、お使いのブラウザの設定をご確認ください。Googleアナリティクスの利用規約については、
-            <a href="https://marketingplatform.google.com/about/analytics/terms/jp/" target="_blank" rel="noopener noreferrer" className="text-[#5BBFB3] hover:underline">Google アナリティクス利用規約</a>
+            <a href="https://marketingplatform.google.com/about/analytics/terms/jp/" target="_blank" rel="noopener noreferrer" className="text-[#B37A4C] hover:underline">Google アナリティクス利用規約</a>
             をご確認ください。
           </p>
         </section>
@@ -62,7 +62,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <p className="mt-3">
             Cookieを無効にする設定やGoogleアドセンスに関する詳細は、
-            <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener noreferrer" className="text-[#5BBFB3] hover:underline">広告 - ポリシーと規約 - Google</a>
+            <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener noreferrer" className="text-[#B37A4C] hover:underline">広告 - ポリシーと規約 - Google</a>
             をご確認ください。
           </p>
         </section>
@@ -85,7 +85,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">7. お問い合わせ</h2>
           <p>
             当サイトの個人情報の取り扱いに関するお問い合わせは、
-            <Link href="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link>
+            <Link href="/#contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link>
             よりご連絡ください。
           </p>
         </section>

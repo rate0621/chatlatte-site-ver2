@@ -6,9 +6,9 @@
   --foreground: oklch(0.145 0 0);
 
   /* Custom brand colors - chatlatte mint */
-  --brand-primary: #4a5568;
-  --brand-accent: #5BBFB3;
-  --brand-accent-light: #e8f5f3;
+  --brand-primary: #33261C;
+  --brand-accent: #B37A4C;
+  --brand-accent-light: #F1E7D8;
   --brand-warm: #9a8b7a;
   --font-display: 'Zen Maru Gothic', sans-serif;
   --card: #ffffff;

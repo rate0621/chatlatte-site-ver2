@@ -77,7 +77,7 @@ export default function TermsPage() {
           <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">8. お問い合わせ</h2>
           <p>
             本規約に関するお問い合わせは、
-            <Link href="/#contact" className="text-[#5BBFB3] hover:underline">お問い合わせフォーム</Link>
+            <Link href="/#contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link>
             よりご連絡ください。
           </p>
         </section>

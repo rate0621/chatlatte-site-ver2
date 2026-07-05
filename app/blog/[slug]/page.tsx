@@ -122,7 +122,7 @@ export default async function BlogDetailPage({
               </time>
             )}
             {blog.category && (
-              <span className="text-xs bg-[#5BBFB3]/10 text-[#5BBFB3] px-2 py-0.5 rounded-full font-medium">
+              <span className="text-xs bg-[#B37A4C]/10 text-[#B37A4C] px-2 py-0.5 rounded-full font-medium">
                 {blog.category.name}
               </span>
             )}
@@ -139,7 +139,7 @@ export default async function BlogDetailPage({
             <Link
               href="/author/chatlatte"
               rel="author"
-              className="font-medium text-gray-800 hover:text-[#5BBFB3] transition-colors"
+              className="font-medium text-gray-800 hover:text-[#B37A4C] transition-colors"
             >
               chatlatte
             </Link>
@@ -185,10 +185,10 @@ export default async function BlogDetailPage({
             prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-gray-200
             prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
             prose-p:my-4 prose-p:text-gray-700
-            prose-a:text-[#5BBFB3] prose-a:no-underline hover:prose-a:underline
+            prose-a:text-[#B37A4C] prose-a:no-underline hover:prose-a:underline
             prose-ul:my-4 prose-ul:pl-6 prose-ul:list-disc prose-li:my-1 prose-li:text-gray-700
             prose-ol:my-4 prose-ol:pl-6 prose-ol:list-decimal
-            prose-blockquote:border-l-4 prose-blockquote:border-[#5BBFB3]/30 prose-blockquote:pl-4 prose-blockquote:text-gray-600 prose-blockquote:italic
+            prose-blockquote:border-l-4 prose-blockquote:border-[#B37A4C]/30 prose-blockquote:pl-4 prose-blockquote:text-gray-600 prose-blockquote:italic
             prose-img:rounded-lg prose-img:my-6
             prose-strong:text-gray-700 prose-strong:font-semibold
             [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4"
@@ -196,7 +196,7 @@ export default async function BlogDetailPage({
         />
 
         <aside className="mt-16 border-t border-gray-200 pt-8">
-          <div className="flex items-start gap-4 bg-[#f7fafa] rounded-lg p-6">
+          <div className="flex items-start gap-4 bg-[#FAF6EF] rounded-lg p-6">
             <img
               src="/chatlatte_logo.png"
               alt="chatlatte"
@@ -211,7 +211,7 @@ export default async function BlogDetailPage({
               <div className="flex items-center gap-4 mt-3">
                 <Link
                   href="/author/chatlatte"
-                  className="text-sm text-[#5BBFB3] hover:underline inline-block"
+                  className="text-sm text-[#B37A4C] hover:underline inline-block"
                 >
                   プロフィールを見る &rarr;
                 </Link>
@@ -239,7 +239,7 @@ export default async function BlogDetailPage({
       </article>
 
       <div className="mt-12">
-        <Link href="/blog" className="text-[#5BBFB3] hover:underline text-sm">
+        <Link href="/blog" className="text-[#B37A4C] hover:underline text-sm">
           &larr; ブログ一覧に戻る
         </Link>
       </div>

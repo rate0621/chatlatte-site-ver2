@@ -1,127 +1,163 @@
-import { Card, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/app/components/ui/hover-card";
-import { AlertCircle, Lightbulb, Trophy, Info } from "lucide-react";
+interface Work {
+  readonly consultation: string;
+  readonly action: string;
+  readonly result: string;
+  readonly resultNote: string;
+  /** 【要確認】業種・従業員規模（例：「メディア運営企業・従業員約50名」）を確認後に記載 */
+  readonly client: string;
+}
 
-const works = [
+const featuredWork: Work & { readonly badge: string } = {
+  badge: "ベンダーに頼んでも解決しなかった相談",
+  consultation:
+    "クラウドの費用が想定より高くて。ベンダーに調査してもらっているんだけど、なかなか解決しなくて…",
+  action:
+    "請求内容とシステム構成をこちらで調べ直し、費用が膨らんでいた原因を特定。削減の実施までやり切りました。",
+  result: "原因を特定し、コスト削減を実現",
+  resultNote: "「調査しましたが分かりませんでした」で終わらせないのが、社内側に立つエンジニアの仕事です",
+  client: "",
+};
+
+const works: readonly Work[] = [
   {
-    title: "AIを活用した業務自動化",
-    challenge: "コンテンツ制作に時間がかかりすぎている",
-    solution: "生成AIを活用した自動化ツールを開発し、定型作業を効率化",
-    achievement: "月150時間の工数削減",
-    achievementLabel: "質を担保しつつ大量のコンテンツ生産に成功",
-    details: "社内にあるコンテンツを元に記事を生成→内容を確認→CMSへの入稿。までをワンクリックで行える管理ツールの開発", // ここに詳細テキストを追加
+    consultation: "コンテンツ制作に時間がかかりすぎている",
+    action:
+      "社内コンテンツをもとに生成AIで記事を作成し、内容確認からCMS入稿までワンクリックで完了する管理ツールを開発。",
+    result: "月150時間削減",
+    resultNote: "質を担保したまま、コンテンツの大量生産に成功",
+    client: "",
   },
   {
-    title: "クリエイティブ制作の効率化",
-    challenge: "画像素材の制作がボトルネックになっている",
-    solution: "AIによる画像自動生成ツールを開発し、制作フローを短縮",
-    achievement: "１時間/件の工数削減",
-    achievementLabel: "制作コスト削減と公開スピード向上",
-    details: "記事のタイトルとディスクリプションを元にサムネイルを一括で生成→CMSへの入稿までをワンクリックで行える機能の実装", // ここに詳細テキストを追加
+    consultation: "画像素材の制作がボトルネックになっている",
+    action:
+      "記事のタイトルと説明文からサムネイル画像を一括生成し、CMS入稿まで自動化する機能を実装。",
+    result: "1件あたり1時間削減",
+    resultNote: "制作コスト削減と公開スピードの向上",
+    client: "",
   },
   {
-    title: "社内ツールによる運用改善",
-    challenge: "手作業での更新作業が多く、ミスも発生しやすい",
-    solution: "一括処理ツールを開発し、作業を標準化・自動化",
-    achievement: "30分/件の工数削減",
-    achievementLabel: "工数短縮、ヒューマンエラー削減",
-    details: "CMSやDBなどへの入稿をバッチ処理で完結", // ここに詳細テキストを追加
+    consultation: "手作業の更新が多くて、ミスも起きやすい",
+    action:
+      "CMSやデータベースへの入稿をバッチ処理化し、作業を標準化・自動化。",
+    result: "1件あたり30分削減",
+    resultNote: "工数短縮に加えて、ヒューマンエラーも削減",
+    client: "",
   },
   {
-    title: "LP制作の内製化支援",
-    challenge: "LPを作るたびに外注コストと時間がかかる",
-    solution: "テンプレート化と制作フローの整備で内製化を実現",
-    achievement: "PDCAの回転数向上",
-    achievementLabel: "制作リードタイム短縮、ABテストの実施",
-    details: "HTMLとCSSだけでテンプレートとなるページを作成し、デザイナーのほうで自由にLPを量産できるように。", // ここに詳細テキストを追加
+    consultation: "LPを作るたびに外注費と時間がかかる",
+    action:
+      "HTMLとCSSのテンプレートと制作フローを整備し、デザイナーだけでLPを量産できる体制に。",
+    result: "内製化を実現",
+    resultNote: "リードタイム短縮、ABテストを回せる体制に",
+    client: "",
   },
   {
-    title: "セキュリティリスクへの対応",
-    challenge: "技術的な脆弱性があるが、社内に対応できる人がいない",
-    solution: "リスク調査から要件整理、社内提案、ベンダー調整まで一気通貫で対応",
-    achievement: "リスク防止",
-    achievementLabel: "情報漏えいリスクの未然防止、将来の拡張性確保",
-    details: "APIキーの漏洩、実装上のセキュリティリスクの検知", // ここに詳細テキストを追加
+    consultation: "脆弱性がありそうだけど、対応できる人がいない",
+    action:
+      "APIキー漏洩や実装上のリスクを調査し、要件整理・社内提案・ベンダー調整まで一気通貫で対応。",
+    result: "リスクを未然に防止",
+    resultNote: "情報漏えいの回避と、将来の拡張性を確保",
+    client: "",
   },
   {
-    title: "クラウドコストの最適化",
-    challenge: "AWSなどのクラウド費用が膨らんでいるが、整理できていない",
-    solution: "不要リソースの棚卸しと除却を実施",
-    achievement: "月10万円以上",
-    achievementLabel: "コスト削減",
-    details: "使っていない環境があるが誰もAWSを触れないため放置されていた環境を引き継ぎいざというときのバックアップなども行ったうえで環境の除却", // ここに詳細テキストを追加
+    consultation: "クラウド費用が膨らんでいるが、誰も整理できない",
+    action:
+      "誰も触れず放置されていたAWS環境を、バックアップを取った上で棚卸し・除却。",
+    result: "月10万円超削減",
+    resultNote: "「怖くて触れない」状態から、管理できる状態へ",
+    client: "",
   },
 ];
 
 export function Works() {
   return (
-    <section id="works" className="py-24 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#4a5568] mb-16 text-center">
-          解決してきた課題と成果
+    <section id="works" className="bg-[#F6F1E8] px-6 py-20 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="font-display mb-4 text-center text-2xl font-bold tracking-wide text-[#33261C] md:text-3xl">
+          相談から、こうなりました
         </h2>
+        <p className="mb-14 text-center leading-relaxed text-[#6E5B4A]">
+          どれも、最初は「ちょっと聞きたいんだけど」から始まった仕事です。
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:grid-rows-[repeat(2,_auto_auto_auto_auto)] lg:grid-rows-[repeat(2,_auto_auto_auto_auto)]">
-          {works.map((work, index) => (
-            <HoverCard key={index} openDelay={200} closeDelay={100}>
-              <HoverCardTrigger asChild>
-                <div className="grid grid-rows-subgrid row-span-4">
-                  <Card className="border-[#e0eeec] bg-white hover:shadow-lg hover:border-[#5BBFB3]/30 transition-all overflow-hidden rounded-2xl grid grid-rows-subgrid row-span-4 cursor-pointer">
-                  <CardHeader className="bg-gradient-to-br from-[#f7fafa] to-[#e8f5f3] pb-4">
-                    <CardTitle className="text-lg leading-snug text-[#4a5568] flex items-start justify-between gap-2">
-                      <span>{work.title}</span>
-                      {work.details && (
-                        <Info className="w-4 h-4 text-[#5BBFB3] flex-shrink-0 mt-0.5" />
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-
-                  {/* 課題 */}
-                  <div className="flex gap-2 px-6">
-                    <AlertCircle className="w-4 h-4 text-[#e0a9a9] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <div className="text-sm font-semibold text-[#d09999]">課題</div>
-                      <p className="text-[#6b7280] text-sm leading-relaxed">
-                        {work.challenge}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* 解決 */}
-                  <div className="flex gap-2 px-6">
-                    <Lightbulb className="w-4 h-4 text-[#5BBFB3] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <div className="text-sm font-semibold text-[#5BBFB3]">解決</div>
-                      <p className="text-[#6b7280] text-sm leading-relaxed">
-                        {work.solution}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* 成果 */}
-                  <div className="flex gap-2 px-6 pb-6">
-                    <Trophy className="w-4 h-4 text-[#4a5568] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <div className="text-sm font-semibold text-[#4a5568]">成果</div>
-                      <div className="text-xl font-bold text-[#4a5568] mb-1">
-                        {work.achievement}
-                      </div>
-                      <div className="text-sm text-[#9ca3af]">
-                        {work.achievementLabel}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-                </div>
-              </HoverCardTrigger>
-              {work.details && (
-                <HoverCardContent className="w-80 bg-white border-[#e0eeec] shadow-lg">
-                  <p className="text-sm text-[#6b7280] leading-relaxed whitespace-pre-wrap">
-                    {work.details}
-                  </p>
-                </HoverCardContent>
+        {/* 目玉実績：ベンダーで解決しなかった問題を解決した話 */}
+        <article className="mb-6 rounded-3xl border-2 border-[#B37A4C]/50 bg-[#FFFDF9] p-7 transition-shadow hover:shadow-lg hover:shadow-[#33261C]/5 md:p-8">
+          <span className="mb-5 inline-block rounded-full bg-[#B37A4C] px-4 py-1.5 text-xs font-bold text-[#FFFDF9]">
+            {featuredWork.badge}
+          </span>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div>
+              <p className="mb-2 text-xs font-bold tracking-wider text-[#8A7461]">
+                もらった相談
+              </p>
+              <p className="rounded-2xl rounded-bl-md bg-[#F1E7D8] px-4 py-3 text-sm leading-relaxed text-[#33261C]">
+                「{featuredWork.consultation}」
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-bold tracking-wider text-[#8A7461]">
+                やったこと
+              </p>
+              <p className="text-sm leading-relaxed text-[#6E5B4A]">
+                {featuredWork.action}
+              </p>
+            </div>
+            <div>
+              <p className="mb-1 text-xs font-bold tracking-wider text-[#B37A4C]">
+                結果
+              </p>
+              <p className="font-display text-xl font-bold leading-snug text-[#33261C]">
+                {featuredWork.result}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-[#8A7461]">
+                {featuredWork.resultNote}
+              </p>
+              {featuredWork.client && (
+                <p className="mt-2 text-xs text-[#8A7461]">{featuredWork.client}</p>
               )}
-            </HoverCard>
+            </div>
+          </div>
+        </article>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {works.map((work) => (
+            <article
+              key={work.consultation}
+              className="flex flex-col rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] p-6 transition-shadow hover:shadow-lg hover:shadow-[#33261C]/5"
+            >
+              <div className="mb-4">
+                <p className="mb-2 text-xs font-bold tracking-wider text-[#8A7461]">
+                  もらった相談
+                </p>
+                <p className="rounded-2xl rounded-bl-md bg-[#F1E7D8] px-4 py-3 text-sm leading-relaxed text-[#33261C]">
+                  「{work.consultation}」
+                </p>
+              </div>
+
+              <div className="mb-5 flex-1">
+                <p className="mb-2 text-xs font-bold tracking-wider text-[#8A7461]">
+                  やったこと
+                </p>
+                <p className="text-sm leading-relaxed text-[#6E5B4A]">
+                  {work.action}
+                </p>
+              </div>
+
+              <div className="border-t-2 border-dashed border-[#E4D6C3] pt-4">
+                <p className="mb-1 text-xs font-bold tracking-wider text-[#B37A4C]">
+                  結果
+                </p>
+                <p className="font-display text-xl font-bold text-[#33261C]">
+                  {work.result}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#8A7461]">
+                  {work.resultNote}
+                </p>
+                {work.client && (
+                  <p className="mt-2 text-xs text-[#8A7461]">{work.client}</p>
+                )}
+              </div>
+            </article>
           ))}
         </div>
       </div>

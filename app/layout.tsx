@@ -7,20 +7,23 @@ import "@/styles/index.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "chatlatte - テクニカルディレクション・業務改善",
+    default: "chatlatte｜エンジニアがいない会社の「最初のエンジニア」",
     template: "%s | chatlatte",
   },
   description:
-    "山形県拠点のフリーランス。業務効率化ツール開発、マーケティング基盤構築、Webサイト運用改善など、課題に合わせた技術支援を行います。",
+    "エンジニアがいない・足りない会社のための技術パートナー。AI業務自動化で月150時間削減、クラウドコスト月10万円超削減の実績。技術顧問からスポット開発まで、山形県天童市から全国対応。まずは30分の無料相談から。",
   metadataBase: new URL("https://www.chatlatte.com"),
   openGraph: {
     type: "website",
     locale: "ja_JP",
     siteName: "chatlatte",
-    images: ["/chatlatte_logo.png"],
+    title: "chatlatte｜エンジニアがいない会社の「最初のエンジニア」",
+    description:
+      "AI業務自動化で月150時間削減の実績。課題の整理から実装まで、社内側に立って伴走します。30分の無料相談から。",
+    images: ["/og-image.png"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     site: "@chatrate0621",
   },
   icons: {
@@ -28,6 +31,32 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
 };
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "chatlatte",
+  description:
+    "エンジニアがいない・足りない会社のための技術支援。AI業務自動化、技術顧問、スポット開発。",
+  url: "https://www.chatlatte.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "天童市",
+    addressRegion: "山形県",
+    addressCountry: "JP",
+  },
+  areaServed: "JP",
+  sameAs: ["https://x.com/chatrate0621"],
+  knowsAbout: [
+    "AI業務自動化",
+    "技術顧問",
+    "AWS",
+    "Google Tag Manager",
+    "Google Analytics 4",
+    "Webアプリケーション開発",
+    "セキュリティ対応",
+  ],
+} as const;
 
 export default function RootLayout({
   children,
@@ -56,6 +85,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <div className="min-h-screen">
           <Header />
           {children}

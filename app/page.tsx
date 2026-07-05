@@ -1,22 +1,22 @@
 import { Hero } from "@/app/components/Hero";
-import { About } from "@/app/components/About";
-import { Strengths } from "@/app/components/Strengths";
-import { Services } from "@/app/components/Services";
+import { Problems } from "@/app/components/Problems";
+import { ForNonIt } from "@/app/components/ForNonIt";
 import { Works } from "@/app/components/Works";
-import { Skills } from "@/app/components/Skills";
-import { WhyMe } from "@/app/components/WhyMe";
+import { Services } from "@/app/components/Services";
+import { Process } from "@/app/components/Process";
+import { Persona } from "@/app/components/Persona";
 import { Contact } from "@/app/components/Contact";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <About />
-      <Strengths />
-      <Services />
+      <Problems />
+      <ForNonIt />
       <Works />
-      <Skills />
-      <WhyMe />
+      <Services />
+      <Process />
+      <Persona />
       <Contact />
     </>
   );

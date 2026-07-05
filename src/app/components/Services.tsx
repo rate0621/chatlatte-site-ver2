@@ -1,77 +1,93 @@
-import { Settings, BarChart3, Globe, DollarSign } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/app/components/ui/card";
+import { Sparkles, MessageCircle, Wrench } from "lucide-react";
 
 const services = [
   {
-    icon: Settings,
-    title: "業務効率化ツール開発",
+    icon: Sparkles,
+    title: "AI業務自動化",
+    badge: "いちばん相談が多い仕事",
+    description:
+      "毎月の手作業や定型業務を、生成AIを使ったツールで自動化します。月150時間の工数削減を実現した実績があります。",
     items: [
-      "AI活用による自動化（コンテンツ生成、画像生成など）",
-      "社内業務のボトルネック特定と解消",
-      "月150時間以上の工数削減",
+      "生成AIを使った業務ツールの開発",
+      "コンテンツ制作・画像制作の自動化",
+      "業務のボトルネック調査と解消",
     ],
   },
   {
-    icon: BarChart3,
-    title: "マーケティング基盤の技術支援",
+    icon: MessageCircle,
+    title: "技術顧問",
+    badge: null,
+    description:
+      "「聞ける人がいない」をなくす、継続的な相談相手です。判断材料をそろえるだけでなく、軽微な作業ならその場で手を動かします。",
     items: [
-      "GTM/GA4の設計・実装・整理",
-      "計測要件の整理とタグ管理",
-      "Karte、HubSpotなどMAツール連携",
+      "ベンダー見積もりの妥当性チェック（「なぜこの金額？」に答えます）",
+      "テキスト修正・バナー差し替えなど、外注するほどでもない作業の巻き取り",
+      "GTM / GA4などマーケティング基盤の整備",
+      "セキュリティリスクの確認と対応",
+      "クラウド費用など技術コストの健全化",
     ],
   },
   {
-    icon: Globe,
-    title: "Webサイト運用・改善",
+    icon: Wrench,
+    title: "スポット開発・改善",
+    badge: null,
+    description:
+      "必要なところだけ、必要なぶんだけ。単発のご依頼も、そのまま作り切るところまで対応します。",
     items: [
-      "LP制作（設計〜コーディング〜公開）",
-      "サイトのテクニカルディレクション",
-      "セキュリティリスク対応・構成改善",
-      "他社開発サイトの引き継ぎ・保守対応",
+      "社内向けツール・Webアプリの開発",
+      "LP制作と内製化の仕組みづくり",
+      "他社が作ったサイト・システムの引き継ぎと保守",
     ],
   },
-  {
-    icon: DollarSign,
-    title: "コスト最適化",
-    items: [
-      "AWSなどクラウドリソースの棚卸し・除却",
-      "不要コストの可視化と削減提案",
-    ],
-  },
-];
+] as const;
 
 export function Services() {
   return (
-    <section id="services" className="py-24 px-6 bg-[#f7fafa]">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-[#4a5568] mb-16 text-center">
-          できること
+    <section id="services" className="bg-[#FFFDF9] px-6 py-20 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="font-display mb-4 text-center text-2xl font-bold tracking-wide text-[#33261C] md:text-3xl">
+          頼めること
         </h2>
+        <p className="mb-14 text-center leading-relaxed text-[#6E5B4A]">
+          この3つに当てはまらなくても大丈夫。「どれに当てはまるか分からない」も、よくある相談です。
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {services.map((service, index) => {
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {services.map((service) => {
             const Icon = service.icon;
             return (
-              <Card key={index} className="bg-white border-[#e0eeec] hover:shadow-lg hover:border-[#5BBFB3]/30 transition-all rounded-2xl">
-                <CardHeader>
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="p-3 bg-[#e8f5f3] rounded-xl">
-                      <Icon className="w-6 h-6 text-[#5BBFB3]" />
-                    </div>
-                    <CardTitle className="text-xl text-[#4a5568]">{service.title}</CardTitle>
+              <div
+                key={service.title}
+                className="flex flex-col rounded-3xl border-2 border-[#E4D6C3] bg-[#F6F1E8] p-7"
+              >
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="rounded-2xl bg-[#B37A4C]/15 p-3">
+                    <Icon className="h-6 w-6 text-[#B37A4C]" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 text-[#6b7280]">
-                    {service.items.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-[#5BBFB3] mt-1">•</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+                  {service.badge && (
+                    <span className="rounded-full bg-[#B37A4C] px-3 py-1 text-xs font-bold text-[#FFFDF9]">
+                      {service.badge}
+                    </span>
+                  )}
+                </div>
+                <h3 className="font-display mb-3 text-xl font-bold text-[#33261C]">
+                  {service.title}
+                </h3>
+                <p className="mb-5 text-sm leading-relaxed text-[#6E5B4A]">
+                  {service.description}
+                </p>
+                <ul className="space-y-2.5">
+                  {service.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 text-sm leading-relaxed text-[#6E5B4A]"
+                    >
+                      <span className="mt-0.5 text-[#B37A4C]">●</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             );
           })}
         </div>
