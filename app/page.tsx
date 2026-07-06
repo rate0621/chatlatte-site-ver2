@@ -5,6 +5,7 @@ import { Works } from "@/app/components/Works";
 import { Services } from "@/app/components/Services";
 import { Process } from "@/app/components/Process";
 import { Persona } from "@/app/components/Persona";
+import { LatestPosts } from "@/app/components/LatestPosts";
 import { Contact } from "@/app/components/Contact";
 
 export default function HomePage() {
@@ -17,6 +18,7 @@ export default function HomePage() {
       <Services />
       <Process />
       <Persona />
+      <LatestPosts />
       <Contact />
     </>
   );
