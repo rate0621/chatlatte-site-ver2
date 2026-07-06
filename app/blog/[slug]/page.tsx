@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getBlogList, getBlogDetail } from "@/lib/microcms";
+import { getBlogList, getBlogDetail, type Blog } from "@/lib/microcms";
+import { BlogCta } from "@/app/components/BlogCta";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -67,6 +68,19 @@ export default async function BlogDetailPage({
     blog = await getBlogDetail(slug);
   } catch {
     notFound();
+  }
+
+  // 関連記事：同カテゴリの最新3件（自身を除く）。同カテゴリが無ければ全体の最新3件
+  let relatedPosts: readonly Blog[] = [];
+  try {
+    const res = await getBlogList({ limit: 100 });
+    const others = res.contents.filter((post) => post.id !== slug);
+    const sameCategory = others.filter(
+      (post) => post.category?.id && post.category.id === blog.category?.id
+    );
+    relatedPosts = (sameCategory.length > 0 ? sameCategory : others).slice(0, 3);
+  } catch (err) {
+    console.error("関連記事の取得に失敗:", err);
   }
 
   const publishedAt = blog.publishedAt
@@ -243,6 +257,36 @@ export default async function BlogDetailPage({
           </div>
         </aside>
       </article>
+
+      {/* 関連記事 */}
+      {relatedPosts.length > 0 && (
+        <section className="mt-16">
+          <h2 className="font-display mb-6 text-lg font-bold text-[#33261C]">
+            あわせて読む
+          </h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {relatedPosts.map((post) => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.id}`}
+                className="group block"
+              >
+                {post.eyecatch && (
+                  <img
+                    src={`${post.eyecatch.url}?w=480&fm=webp`}
+                    alt={post.title}
+                    loading="lazy"
+                    className="aspect-[1200/630] w-full rounded-xl border border-[#E4D6C3] object-cover transition-shadow group-hover:shadow-md"
+                  />
+                )}
+                <h3 className="sr-only">{post.title}</h3>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <BlogCta />
 
       <div className="mt-12">
         <Link href="/blog" className="text-[#B37A4C] hover:underline text-sm">
