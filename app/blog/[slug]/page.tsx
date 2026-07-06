@@ -22,7 +22,13 @@ export async function generateMetadata({
 
   try {
     const blog = await getBlogDetail(slug);
-    const description = blog.description ?? "";
+    // descriptionが未設定の記事は本文冒頭から抜粋を生成する
+    const excerpt = blog.content
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 120);
+    const description = blog.description || excerpt;
     const images = blog.eyecatch ? [{ url: blog.eyecatch.url, width: blog.eyecatch.width, height: blog.eyecatch.height }] : [];
 
     return {
