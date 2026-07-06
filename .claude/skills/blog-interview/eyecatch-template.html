@@ -102,10 +102,10 @@
     if (cat) document.getElementById("cat").textContent = cat;
     if (params.get("theme") === "dark") document.body.classList.add("dark");
 
-    // 「——」があればサブタイトルとして分離する
+    // 「——」（EMダッシュ）または「――」（水平バー）があればサブタイトルとして分離する
     const titleEl = document.getElementById("title");
     const subtitleEl = document.getElementById("subtitle");
-    const parts = rawTitle.split("——");
+    const parts = rawTitle.split(/(?:——|――)/);
     setPhrased(titleEl, parts[0]);
     if (parts.length > 1) {
       setPhrased(subtitleEl, parts.slice(1).join("——"));
