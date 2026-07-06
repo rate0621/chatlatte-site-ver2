@@ -42,9 +42,10 @@ description: テーマを決めてAIがインタビューし、回答からブ�
 以下をまとめて提示し、**承認を得てから**執筆に進む：
 - 見出し構成（h2/h3のアウトライン）
 - タイトル案3つ（検索意図とXでのクリックを意識した差のある3案）
+- **description案**（100〜120字。検索結果でのクリックを意識し、記事の中身に忠実に）
 - 投稿先カテゴリ（`post-draft.sh categories` で実在カテゴリ一覧を取得して提示）
 
-※ microCMSの現行スキーマは title / content / category のみ（TS型のdescription/eyecatch/tagはスキーマ未定義）。ユーザーがスキーマに `description` フィールドを追加した場合のみ、description案も提示して `--description` で送る
+※ microCMSスキーマは title / content / description / category（descriptionは2026-07-06に追加済み）。eyecatch/tagはスキーマ未定義
 
 ### Phase 4: 執筆
 
@@ -61,7 +62,7 @@ description: テーマを決めてAIがインタビューし、回答からブ�
 
 ```bash
 .claude/skills/blog-interview/scripts/post-draft.sh post docs/interviews/<slug>.html \
-  --title "タイトル" --category "カテゴリID"
+  --title "タイトル" --description "説明文" --category "カテゴリID"
 ```
 
 - 成功したら返却されたコンテンツIDと管理画面URLを提示する
