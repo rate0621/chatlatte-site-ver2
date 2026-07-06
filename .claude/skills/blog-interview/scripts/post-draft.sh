@@ -9,6 +9,7 @@ usage() {
 使い方:
   post-draft.sh categories
   post-draft.sh post <本文HTMLファイル> --title "タイトル" --description "説明文" --category "カテゴリID"
+  post-draft.sh eyecatch <コンテンツID> <画像ファイル>   # メディアにアップロードしてeyecatchに設定
 USAGE
   exit 1
 }
@@ -82,6 +83,28 @@ case "$cmd" in
       if [[ "$http_code" == "401" || "$http_code" == "403" ]]; then
         echo "→ POST権限付きのAPIキーを .env の MICROCMS_WRITE_API_KEY に設定してください" >&2
       fi
+      exit 1
+    fi
+    ;;
+
+  eyecatch)
+    shift
+    content_id="${1:-}"; image="${2:-}"
+    [[ -n "$content_id" && -f "$image" ]] || usage
+
+    media_url=$(curl -sf -X POST -H "X-MICROCMS-API-KEY: ${API_KEY}" \
+      -F "file=@${image}" \
+      "https://${DOMAIN}.microcms-management.io/api/v1/media" | jq -r '.url')
+
+    http_code=$(jq -n --arg u "$media_url" '{eyecatch: $u}' \
+      | curl -s -o /dev/null -w "%{http_code}" -X PATCH \
+        -H "X-MICROCMS-API-KEY: ${API_KEY}" -H "Content-Type: application/json" \
+        -d @- "${BASE}/blogs/${content_id}")
+
+    if [[ "$http_code" == "200" ]]; then
+      echo "✅ eyecatchを設定しました: ${content_id} ← ${media_url}"
+    else
+      echo "❌ eyecatch設定に失敗しました (HTTP ${http_code})" >&2
       exit 1
     fi
     ;;

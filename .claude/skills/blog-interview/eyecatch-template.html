@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden; position: relative;
+    background: #F6F1E8; font-family: "Zen Maru Gothic", sans-serif;
+    box-sizing: border-box; padding: 56px 64px;
+    display: flex; flex-direction: column;
+  }
+  .ring {
+    position: absolute; right: -150px; bottom: -190px;
+    width: 500px; height: 500px; border-radius: 50%;
+    border: 70px solid rgba(179, 122, 76, 0.12); pointer-events: none;
+  }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand svg { width: 46px; height: 46px; }
+  .brand span { font-weight: 700; font-size: 28px; color: #33261C; }
+  .cat {
+    background: #B37A4C; color: #FFFDF9; font-weight: 700; font-size: 22px;
+    padding: 8px 26px; border-radius: 999px;
+  }
+  .main { flex: 1; display: flex; flex-direction: column; justify-content: center; position: relative; }
+  .title {
+    font-weight: 700; color: #33261C; line-height: 1.5;
+    letter-spacing: 0.01em; max-height: 380px; overflow: hidden;
+  }
+  .subtitle {
+    font-weight: 700; color: #8A7461; line-height: 1.5; margin-top: 18px;
+  }
+  .bottom { display: flex; justify-content: space-between; align-items: center; }
+  .url { font-family: "Noto Sans JP", sans-serif; font-size: 22px; color: #8A7461; }
+  .bar { width: 120px; height: 10px; border-radius: 5px; background: #B37A4C; }
+
+  .title .accent { color: #B37A4C; }
+  .subtitle .accent { color: #B37A4C; }
+
+  /* ダークバリエーション */
+  body.dark { background: #33261C; }
+  body.dark .title .accent { color: #E0A96D; }
+  body.dark .subtitle .accent { color: #E0A96D; }
+  body.dark .ring { border-color: rgba(179, 122, 76, 0.22); }
+  body.dark .brand span { color: #F6F1E8; }
+  body.dark .title { color: #F6F1E8; }
+  body.dark .subtitle { color: #C9B7A4; }
+  body.dark .url { color: #C9B7A4; }
+</style>
+</head>
+<body>
+  <div class="ring"></div>
+  <div class="top">
+    <div class="brand">
+      <svg viewBox="0 0 128 128">
+        <path d="M34 93 Q28 112 18 124 Q42 118 54 104 Z" fill="#B37A4C"/>
+        <circle cx="64" cy="58" r="46" fill="#B37A4C"/>
+        <circle cx="64" cy="58" r="36" fill="none" stroke="#F6F1E8" stroke-opacity="0.45" stroke-width="4"/>
+        <circle cx="46" cy="58" r="7.5" fill="#FFFDF9"/>
+        <circle cx="64" cy="58" r="7.5" fill="#FFFDF9"/>
+        <circle cx="82" cy="58" r="7.5" fill="#FFFDF9"/>
+      </svg>
+      <span>chatlatte</span>
+    </div>
+    <div class="cat" id="cat">ビジネス</div>
+  </div>
+  <div class="main">
+    <div class="title" id="title"></div>
+    <div class="subtitle" id="subtitle" hidden></div>
+  </div>
+  <div class="bottom">
+    <div class="url">www.chatlatte.com</div>
+    <div class="bar"></div>
+  </div>
+  <script type="module">
+    // BudouX：日本語を文節単位で改行させる（「垂れ流し／に」のような不自然な折り返しを防ぐ）
+    import { loadDefaultJapaneseParser } from "https://cdn.jsdelivr.net/npm/budoux@0.6.2/module/index.js";
+    const parser = loadDefaultJapaneseParser();
+
+    // 「**強調**」マーカーを解釈しつつ、文節単位のスパンを組み立てる
+    const setPhrased = (el, text) => {
+      el.textContent = "";
+      const tokens = text.split(/\*\*(.+?)\*\*/g);
+      tokens.forEach((token, index) => {
+        if (!token) return;
+        const isAccent = index % 2 === 1;
+        for (const phrase of parser.parse(token)) {
+          const span = document.createElement("span");
+          span.textContent = phrase;
+          span.style.display = "inline-block";
+          if (isAccent) span.classList.add("accent");
+          el.appendChild(span);
+        }
+      });
+    };
+
+    const params = new URLSearchParams(location.search);
+    const rawTitle = params.get("title") || "記事タイトル";
+    const cat = params.get("cat");
+    if (cat) document.getElementById("cat").textContent = cat;
+    if (params.get("theme") === "dark") document.body.classList.add("dark");
+
+    // 「——」があればサブタイトルとして分離する
+    const titleEl = document.getElementById("title");
+    const subtitleEl = document.getElementById("subtitle");
+    const parts = rawTitle.split("——");
+    setPhrased(titleEl, parts[0]);
+    if (parts.length > 1) {
+      setPhrased(subtitleEl, parts.slice(1).join("——"));
+      subtitleEl.hidden = false;
+    }
+
+    // タイトル長に応じてフォントサイズを自動調整（はみ出したら縮小）
+    let size = 68;
+    const fit = () => {
+      titleEl.style.fontSize = size + "px";
+      subtitleEl.style.fontSize = Math.round(size * 0.5) + "px";
+      const main = document.querySelector(".main");
+      return main.scrollHeight <= main.clientHeight + 1;
+    };
+    while (!fit() && size > 40) size -= 2;
+  </script>
+</body>
+</html>
