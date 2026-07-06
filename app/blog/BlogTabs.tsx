@@ -54,7 +54,7 @@ export function BlogTabs({ cmsBlogs, categories }: BlogTabsProps) {
             <article key={post.id} className="border-b border-gray-100 pb-8">
               <Link
                 href={`/blog/${post.id}`}
-                className="group flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6"
+                className="group flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6"
               >
                 {post.eyecatch && (
                   <img
@@ -81,7 +81,7 @@ export function BlogTabs({ cmsBlogs, categories }: BlogTabsProps) {
                     {post.title}
                   </h2>
                   {post.description && (
-                    <p className="text-sm leading-relaxed text-gray-600">
+                    <p className="line-clamp-2 text-sm leading-relaxed text-gray-600">
                       {post.description}
                     </p>
                   )}
