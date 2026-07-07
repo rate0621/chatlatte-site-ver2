@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getBlogList, type Category } from "@/lib/microcms";
+import { getBlogList, type Tag } from "@/lib/microcms";
 import { BlogTabs } from "./BlogTabs";
 import { BlogCta } from "@/app/components/BlogCta";
 import type { Metadata } from "next";
@@ -11,17 +11,17 @@ export const metadata: Metadata = {
     "エンジニアがいない会社の「最初のエンジニア」が、現場の実録と考えごとを書いています。AI業務自動化やベンダーとの付き合い方から、山形の暮らしまで。",
 };
 
-// ブログ記事からユニークなカテゴリを抽出
-function extractUniqueCategories(
+// ブログ記事からユニークなタグを抽出（1記事が複数タグを持てるためflatMapで集約）
+function extractUniqueTags(
   blogs: Awaited<ReturnType<typeof getBlogList>>["contents"]
-): Category[] {
-  const catMap = new Map<string, Category>();
+): Tag[] {
+  const tagMap = new Map<string, Tag>();
   for (const blog of blogs) {
-    if (blog.category && !catMap.has(blog.category.id)) {
-      catMap.set(blog.category.id, blog.category);
+    for (const tag of blog.tags ?? []) {
+      if (!tagMap.has(tag.id)) tagMap.set(tag.id, tag);
     }
   }
-  return [...catMap.values()];
+  return [...tagMap.values()];
 }
 
 export default async function BlogPage() {
@@ -34,7 +34,7 @@ export default async function BlogPage() {
     console.error("microCMS記事の取得に失敗:", err);
   }
 
-  const categories = extractUniqueCategories(cmsBlogs);
+  const tags = extractUniqueTags(cmsBlogs);
   const featured = cmsBlogs[0];
 
   return (
@@ -87,11 +87,7 @@ export default async function BlogPage() {
       )}
 
       <Suspense>
-        <BlogTabs
-          cmsBlogs={cmsBlogs}
-          categories={categories}
-          featuredId={featured?.id}
-        />
+        <BlogTabs cmsBlogs={cmsBlogs} tags={tags} featuredId={featured?.id} />
       </Suspense>
 
       <BlogCta />

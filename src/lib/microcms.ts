@@ -12,12 +12,12 @@ export const client = createClient({
   apiKey: process.env.MICROCMS_API_KEY ?? "",
 });
 
-// タグの型
+// タグの型（複数付けられる。一覧の絞り込み・関連記事はこちらを基準にする）
 export type Tag = {
   readonly name: string;
 } & MicroCMSListContent;
 
-// カテゴリの型
+// カテゴリの型（旧スキーマの名残。今は未使用だが値自体は残っている）
 export type Category = {
   readonly name: string;
 } & MicroCMSListContent;
@@ -27,7 +27,7 @@ export type Blog = {
   readonly title: string;
   readonly content: string;
   readonly eyecatch?: MicroCMSImage;
-  readonly tag?: readonly Tag[];
+  readonly tags?: readonly Tag[];
   readonly category?: Category | null;
   readonly description?: string;
 } & MicroCMSListContent;

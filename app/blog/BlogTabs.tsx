@@ -2,24 +2,24 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import type { Blog, Category } from "@/lib/microcms";
+import type { Blog, Tag } from "@/lib/microcms";
 
 interface BlogTabsProps {
   readonly cmsBlogs: readonly Blog[];
-  readonly categories: readonly Category[];
+  readonly tags: readonly Tag[];
   /** フィーチャーカードで表示済みの記事ID（グリッドから除外する） */
   readonly featuredId?: string;
 }
 
-export function BlogTabs({ cmsBlogs, categories, featuredId }: BlogTabsProps) {
+export function BlogTabs({ cmsBlogs, tags, featuredId }: BlogTabsProps) {
   const searchParams = useSearchParams();
-  const currentCategory = searchParams.get("category") ?? "";
+  const currentTag = searchParams.get("tag") ?? "";
 
   const gridBlogs = cmsBlogs.filter((post) => post.id !== featuredId);
   const filteredBlogs =
-    currentCategory === ""
+    currentTag === ""
       ? gridBlogs
-      : gridBlogs.filter((post) => post.category?.id === currentCategory);
+      : gridBlogs.filter((post) => post.tags?.some((t) => t.id === currentTag));
 
   const tabClass = (active: boolean) =>
     `shrink-0 rounded-full px-5 py-2 text-sm font-medium transition-colors cursor-pointer ${
@@ -30,18 +30,18 @@ export function BlogTabs({ cmsBlogs, categories, featuredId }: BlogTabsProps) {
 
   return (
     <>
-      {/* カテゴリタブ */}
+      {/* タグ（1記事が複数のタグに属することがある） */}
       <div className="mb-10 flex gap-2 overflow-x-auto pb-1">
-        <Link href="/blog" className={tabClass(currentCategory === "")}>
+        <Link href="/blog" className={tabClass(currentTag === "")}>
           すべて
         </Link>
-        {categories.map((cat) => (
+        {tags.map((tag) => (
           <Link
-            key={cat.id}
-            href={`/blog?category=${cat.id}`}
-            className={tabClass(currentCategory === cat.id)}
+            key={tag.id}
+            href={`/blog?tag=${tag.id}`}
+            className={tabClass(currentTag === tag.id)}
           >
-            {cat.name}
+            {tag.name}
           </Link>
         ))}
       </div>
@@ -60,7 +60,7 @@ export function BlogTabs({ cmsBlogs, categories, featuredId }: BlogTabsProps) {
                     className="aspect-[1200/630] w-full rounded-xl border border-[#E4D6C3] object-cover transition-shadow group-hover:shadow-md"
                   />
                 )}
-                {/* カテゴリは画像内のチップで表示済みのため、ここでは日付のみ */}
+                {/* タグは画像内のチップで表示済みのため、ここでは日付のみ */}
                 {post.publishedAt && (
                   <time className="mt-2.5 block text-xs text-[#8A7461]">
                     {new Date(post.publishedAt).toLocaleDateString("ja-JP")}

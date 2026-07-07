@@ -70,15 +70,16 @@ export default async function BlogDetailPage({
     notFound();
   }
 
-  // 関連記事：同カテゴリの最新3件（自身を除く）。同カテゴリが無ければ全体の最新3件
+  // 関連記事：タグを1つでも共有する最新3件（自身を除く）。共有タグが無ければ全体の最新3件
   let relatedPosts: readonly Blog[] = [];
   try {
     const res = await getBlogList({ limit: 100 });
     const others = res.contents.filter((post) => post.id !== slug);
-    const sameCategory = others.filter(
-      (post) => post.category?.id && post.category.id === blog.category?.id
+    const blogTagIds = new Set((blog.tags ?? []).map((t) => t.id));
+    const sharesTag = others.filter((post) =>
+      post.tags?.some((t) => blogTagIds.has(t.id))
     );
-    relatedPosts = (sameCategory.length > 0 ? sameCategory : others).slice(0, 3);
+    relatedPosts = (sharesTag.length > 0 ? sharesTag : others).slice(0, 3);
   } catch (err) {
     console.error("関連記事の取得に失敗:", err);
   }
@@ -141,11 +142,14 @@ export default async function BlogDetailPage({
                 公開日：{publishedAt}
               </time>
             )}
-            {blog.category && (
-              <span className="text-xs bg-[#B37A4C]/10 text-[#B37A4C] px-2 py-0.5 rounded-full font-medium">
-                {blog.category.name}
+            {blog.tags?.map((tag) => (
+              <span
+                key={tag.id}
+                className="text-xs bg-[#B37A4C]/10 text-[#B37A4C] px-2 py-0.5 rounded-full font-medium"
+              >
+                {tag.name}
               </span>
-            )}
+            ))}
           </div>
           <h1 className="text-3xl font-bold text-gray-800 leading-tight">{blog.title}</h1>
           <div className="flex items-center gap-2 mt-4 text-sm text-gray-600">
