@@ -79,21 +79,68 @@
     import { loadDefaultJapaneseParser } from "https://cdn.jsdelivr.net/npm/budoux@0.6.2/module/index.js";
     const parser = loadDefaultJapaneseParser();
 
-    // 「**強調**」マーカーを解釈しつつ、文節単位のスパンを組み立てる
-    const setPhrased = (el, text) => {
+    // 「**強調**」マーカーを解釈しつつ、文節単位のスパンを組み立てる。
+    // マーカーで先にテキストを分割してからBudouXにかけると、各断片が前後の文脈を失い
+    // 「できる／人」のような不自然な位置で改行されるため、必ず全文を一度解析してから
+    // 強調範囲をあとで文節に割り当てる（文脈込みで自然な文節が決まる）。
+    const setPhrased = (el, rawText) => {
       el.textContent = "";
-      const tokens = text.split(/\*\*(.+?)\*\*/g);
-      tokens.forEach((token, index) => {
-        if (!token) return;
-        const isAccent = index % 2 === 1;
-        for (const phrase of parser.parse(token)) {
-          const span = document.createElement("span");
-          span.textContent = phrase;
-          span.style.display = "inline-block";
-          if (isAccent) span.classList.add("accent");
-          el.appendChild(span);
+
+      // **マーカーを取り除いた素のテキストと、強調範囲（素のテキスト内の文字位置）を求める
+      let plain = "";
+      const ranges = [];
+      const markerRe = /\*\*(.+?)\*\*/g;
+      let lastIndex = 0;
+      let match;
+      while ((match = markerRe.exec(rawText)) !== null) {
+        plain += rawText.slice(lastIndex, match.index);
+        const start = plain.length;
+        plain += match[1];
+        ranges.push([start, plain.length]);
+        lastIndex = markerRe.lastIndex;
+      }
+      plain += rawText.slice(lastIndex);
+
+      // 「」で囲まれた範囲は1つの意味の塊なので、BudouXが内部で割っても改行させない
+      // （例：「できる人」→「できる／人」のような分割をここで統合する）
+      const bracketRanges = [];
+      const bracketRe = /「[^」]*」/g;
+      let bracketMatch;
+      while ((bracketMatch = bracketRe.exec(plain)) !== null) {
+        bracketRanges.push([bracketMatch.index, bracketMatch.index + bracketMatch[0].length]);
+      }
+      // BudouXの文節境界はカギ括弧の境界と一致しないことがある（例：「人」を」のように
+      // 閉じ括弧と括弧外の文字が同じ文節に入る）ため、一部でも重なっていれば対象とする
+      const bracketIndexOf = (start, end) =>
+        bracketRanges.findIndex(([s, e]) => start < e && end > s);
+
+      // 全文の文脈込みで文節分割してから、各文節が強調範囲と重なるか判定する
+      let cursor = 0;
+      const units = []; // { text, accent, bracket }
+      for (const phrase of parser.parse(plain)) {
+        const phraseStart = cursor;
+        const phraseEnd = cursor + phrase.length;
+        cursor = phraseEnd;
+        const isAccent = ranges.some(([s, e]) => phraseStart < e && phraseEnd > s);
+        const bracket = bracketIndexOf(phraseStart, phraseEnd);
+
+        const prev = units[units.length - 1];
+        if (bracket !== -1 && prev && prev.bracket === bracket) {
+          // 同じカギ括弧内の文節は1つのスパンに統合し、途中で改行できないようにする
+          prev.text += phrase;
+          prev.accent = prev.accent || isAccent;
+        } else {
+          units.push({ text: phrase, accent: isAccent, bracket });
         }
-      });
+      }
+
+      for (const unit of units) {
+        const span = document.createElement("span");
+        span.textContent = unit.text;
+        span.style.display = "inline-block";
+        if (unit.accent) span.classList.add("accent");
+        el.appendChild(span);
+      }
     };
 
     const params = new URLSearchParams(location.search);
