@@ -65,36 +65,30 @@ export default async function BlogPage() {
           {featured && (
             <Link
               href={`/blog/${featured.id}`}
-              className="group mb-12 flex flex-col gap-6 rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] p-6 transition-shadow hover:shadow-lg md:flex-row md:items-center md:p-8"
+              className="group mb-12 flex flex-col overflow-hidden rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] transition-shadow hover:shadow-lg md:flex-row"
             >
               {featured.eyecatch && (
-                <img
-                  src={`${featured.eyecatch.url}?w=600&fm=webp`}
-                  alt=""
-                  className="aspect-[1200/630] w-full shrink-0 rounded-xl border border-[#E4D6C3] object-cover md:w-72"
-                />
-              )}
-              <div className="flex flex-1 flex-col">
-                <div className="mb-3 flex items-center gap-3">
-                  <span className="rounded-full bg-[#B37A4C] px-3 py-1 text-xs font-bold text-[#FFFDF9]">
-                    新着
-                  </span>
-                  {featured.publishedAt && (
-                    <time className="text-sm text-[#8A7461]">
-                      {new Date(featured.publishedAt).toLocaleDateString("ja-JP")}
-                    </time>
-                  )}
+                <div className="flex shrink-0 items-center justify-center bg-[#F1E7D8] md:w-[58%]">
+                  <img
+                    src={`${featured.eyecatch.url}?w=800&fm=webp`}
+                    alt=""
+                    className="aspect-[1200/630] w-full object-contain"
+                  />
                 </div>
+              )}
+              <div className="flex flex-1 flex-col justify-between gap-4 p-6 md:p-8">
                 {/* タイトルは視覚上はサムネイル画像内にあるため、SEO・支援技術向けにDOMにのみ残す */}
                 <h2 className="sr-only">{featured.title}</h2>
                 {featured.description && (
-                  <p className="line-clamp-3 text-sm leading-relaxed text-[#6E5B4A]">
+                  <p className="line-clamp-4 text-sm leading-relaxed text-[#6E5B4A]">
                     {featured.description}
                   </p>
                 )}
-                <span className="mt-4 text-sm font-bold text-[#B37A4C]">
-                  読む →
-                </span>
+                {featured.publishedAt && (
+                  <time className="self-end text-sm text-[#8A7461]">
+                    {new Date(featured.publishedAt).toLocaleDateString("ja-JP")}
+                  </time>
+                )}
               </div>
             </Link>
           )}
