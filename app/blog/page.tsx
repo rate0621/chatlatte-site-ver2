@@ -65,16 +65,16 @@ export default async function BlogPage() {
           {featured && (
             <Link
               href={`/blog/${featured.id}`}
-              className="group mb-12 flex flex-col overflow-hidden rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] transition-shadow hover:shadow-lg md:flex-row md:items-start"
+              className="group mb-12 flex flex-col gap-6 rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] p-6 transition-shadow hover:shadow-lg md:flex-row md:items-center md:p-8"
             >
               {featured.eyecatch && (
                 <img
                   src={`${featured.eyecatch.url}?w=600&fm=webp`}
                   alt=""
-                  className="aspect-[1200/630] w-full shrink-0 object-cover md:w-72"
+                  className="aspect-[1200/630] w-full shrink-0 rounded-xl border border-[#E4D6C3] object-cover md:w-72"
                 />
               )}
-              <div className="flex flex-1 flex-col justify-center p-6 md:p-8">
+              <div className="flex flex-1 flex-col">
                 <div className="mb-3 flex items-center gap-3">
                   <span className="rounded-full bg-[#B37A4C] px-3 py-1 text-xs font-bold text-[#FFFDF9]">
                     新着
