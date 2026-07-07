@@ -80,15 +80,16 @@
     const parser = loadDefaultJapaneseParser();
 
     // 「**強調**」マーカーを解釈しつつ、文節単位のスパンを組み立てる。
-    // マーカーで先にテキストを分割してからBudouXにかけると、各断片が前後の文脈を失い
-    // 「できる／人」のような不自然な位置で改行されるため、必ず全文を一度解析してから
-    // 強調範囲をあとで文節に割り当てる（文脈込みで自然な文節が決まる）。
+    // 改行してよい場所（セグメント境界）と、色を塗る場所（アクセント）は別の基準なので分けて扱う：
+    //   - セグメント境界：「」の中は丸ごと1つにして改行させない。それ以外はBudouXの文節境界で区切る
+    //   - アクセント色：**マーカーの文字位置と厳密に一致する範囲だけを塗る（セグメントをまたいでよい）
+    // これを1つの基準で済まそうとすると、「」直後の「を」「に」まで着色されるなどのズレが起きる。
     const setPhrased = (el, rawText) => {
       el.textContent = "";
 
       // **マーカーを取り除いた素のテキストと、強調範囲（素のテキスト内の文字位置）を求める
       let plain = "";
-      const ranges = [];
+      const accentRanges = [];
       const markerRe = /\*\*(.+?)\*\*/g;
       let lastIndex = 0;
       let match;
@@ -96,50 +97,64 @@
         plain += rawText.slice(lastIndex, match.index);
         const start = plain.length;
         plain += match[1];
-        ranges.push([start, plain.length]);
+        accentRanges.push([start, plain.length]);
         lastIndex = markerRe.lastIndex;
       }
       plain += rawText.slice(lastIndex);
+      const isAccentChar = (i) => accentRanges.some(([s, e]) => i >= s && i < e);
 
-      // 「」で囲まれた範囲は1つの意味の塊なので、BudouXが内部で割っても改行させない
-      // （例：「できる人」→「できる／人」のような分割をここで統合する）
+      // 「」で囲まれた範囲は1つの意味の塊なので、内部では改行させない
       const bracketRanges = [];
       const bracketRe = /「[^」]*」/g;
       let bracketMatch;
       while ((bracketMatch = bracketRe.exec(plain)) !== null) {
         bracketRanges.push([bracketMatch.index, bracketMatch.index + bracketMatch[0].length]);
       }
-      // BudouXの文節境界はカギ括弧の境界と一致しないことがある（例：「人」を」のように
-      // 閉じ括弧と括弧外の文字が同じ文節に入る）ため、一部でも重なっていれば対象とする
-      const bracketIndexOf = (start, end) =>
-        bracketRanges.findIndex(([s, e]) => start < e && end > s);
+      const bracketAtChar = (i) => bracketRanges.findIndex(([s, e]) => i >= s && i < e);
 
-      // 全文の文脈込みで文節分割してから、各文節が強調範囲と重なるか判定する
+      // BudouXの文節境界（「」の外側で改行してよい位置）を求める
+      const phraseStarts = new Set();
       let cursor = 0;
-      const units = []; // { text, accent, bracket }
       for (const phrase of parser.parse(plain)) {
-        const phraseStart = cursor;
-        const phraseEnd = cursor + phrase.length;
-        cursor = phraseEnd;
-        const isAccent = ranges.some(([s, e]) => phraseStart < e && phraseEnd > s);
-        const bracket = bracketIndexOf(phraseStart, phraseEnd);
-
-        const prev = units[units.length - 1];
-        if (bracket !== -1 && prev && prev.bracket === bracket) {
-          // 同じカギ括弧内の文節は1つのスパンに統合し、途中で改行できないようにする
-          prev.text += phrase;
-          prev.accent = prev.accent || isAccent;
-        } else {
-          units.push({ text: phrase, accent: isAccent, bracket });
-        }
+        phraseStarts.add(cursor);
+        cursor += phrase.length;
       }
 
-      for (const unit of units) {
-        const span = document.createElement("span");
-        span.textContent = unit.text;
-        span.style.display = "inline-block";
-        if (unit.accent) span.classList.add("accent");
-        el.appendChild(span);
+      // 改行の最小単位（セグメント）に分割する：「」の中は丸ごと1つ、外側は文節ごと
+      const segments = [];
+      let i = 0;
+      while (i < plain.length) {
+        const br = bracketAtChar(i);
+        let j = i + 1;
+        if (br !== -1) {
+          while (j < plain.length && bracketAtChar(j) === br) j++;
+        } else {
+          while (j < plain.length && bracketAtChar(j) === -1 && !phraseStarts.has(j)) j++;
+        }
+        segments.push([i, j]);
+        i = j;
+      }
+
+      // 各セグメントをinline-block（＝改行しない1単位）にしつつ、
+      // 内部はアクセントの有無で正確に色分けした子スパンに分ける
+      for (const [segStart, segEnd] of segments) {
+        const wrapper = document.createElement("span");
+        wrapper.style.display = "inline-block";
+
+        let runStart = segStart;
+        let runAccent = isAccentChar(segStart);
+        for (let k = segStart + 1; k <= segEnd; k++) {
+          const charAccent = k < segEnd ? isAccentChar(k) : !runAccent; // 末尾で必ず1回フラッシュする
+          if (charAccent !== runAccent) {
+            const child = document.createElement("span");
+            child.textContent = plain.slice(runStart, k);
+            if (runAccent) child.classList.add("accent");
+            wrapper.appendChild(child);
+            runStart = k;
+            runAccent = charAccent;
+          }
+        }
+        el.appendChild(wrapper);
       }
     };
 
