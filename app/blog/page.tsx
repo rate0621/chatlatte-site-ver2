@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getBlogList, type Tag } from "@/lib/microcms";
-import { BlogTabs } from "./BlogTabs";
+import { getBlogList } from "@/lib/microcms";
+import { BlogTagSidebar } from "./BlogTagSidebar";
+import { BlogGrid } from "./BlogGrid";
 import { BlogCta } from "@/app/components/BlogCta";
 import type { Metadata } from "next";
 
@@ -11,17 +12,22 @@ export const metadata: Metadata = {
     "エンジニアがいない会社の「最初のエンジニア」が、現場の実録と考えごとを書いています。AI業務自動化やベンダーとの付き合い方から、山形の暮らしまで。",
 };
 
-// ブログ記事からユニークなタグを抽出（1記事が複数タグを持てるためflatMapで集約）
-function extractUniqueTags(
+// ブログ記事からタグごとの件数を集計する（1記事が複数タグを持てるためflatMapで集約）
+function extractTagsWithCount(
   blogs: Awaited<ReturnType<typeof getBlogList>>["contents"]
-): Tag[] {
-  const tagMap = new Map<string, Tag>();
+) {
+  const tagMap = new Map<string, { id: string; name: string; count: number }>();
   for (const blog of blogs) {
     for (const tag of blog.tags ?? []) {
-      if (!tagMap.has(tag.id)) tagMap.set(tag.id, tag);
+      const entry = tagMap.get(tag.id);
+      if (entry) {
+        entry.count += 1;
+      } else {
+        tagMap.set(tag.id, { id: tag.id, name: tag.name, count: 1 });
+      }
     }
   }
-  return [...tagMap.values()];
+  return [...tagMap.values()].sort((a, b) => b.count - a.count);
 }
 
 export default async function BlogPage() {
@@ -34,7 +40,7 @@ export default async function BlogPage() {
     console.error("microCMS記事の取得に失敗:", err);
   }
 
-  const tags = extractUniqueTags(cmsBlogs);
+  const tags = extractTagsWithCount(cmsBlogs);
   const featured = cmsBlogs[0];
 
   return (
@@ -47,48 +53,58 @@ export default async function BlogPage() {
         仕事の実録から、山形の暮らしまで。
       </p>
 
-      {/* 最新記事のフィーチャーカード */}
-      {featured && (
-        <Link
-          href={`/blog/${featured.id}`}
-          className="group mb-12 flex flex-col overflow-hidden rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] transition-shadow hover:shadow-lg md:flex-row"
-        >
-          {featured.eyecatch && (
-            <img
-              src={`${featured.eyecatch.url}?w=1000&fm=webp`}
-              alt=""
-              className="aspect-[1200/630] w-full object-cover md:w-[55%]"
-            />
-          )}
-          <div className="flex flex-col justify-center p-6 md:p-8">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="rounded-full bg-[#B37A4C] px-3 py-1 text-xs font-bold text-[#FFFDF9]">
-                新着
-              </span>
-              {featured.publishedAt && (
-                <time className="text-sm text-[#8A7461]">
-                  {new Date(featured.publishedAt).toLocaleDateString("ja-JP")}
-                </time>
-              )}
-            </div>
-            <h2 className="font-display mb-3 text-xl font-bold leading-snug text-[#33261C] transition-colors group-hover:text-[#B37A4C] md:text-2xl">
-              {featured.title}
-            </h2>
-            {featured.description && (
-              <p className="line-clamp-3 text-sm leading-relaxed text-[#6E5B4A]">
-                {featured.description}
-              </p>
-            )}
-            <span className="mt-4 text-sm font-bold text-[#B37A4C]">
-              読む →
-            </span>
-          </div>
-        </Link>
-      )}
+      <div className="lg:grid lg:grid-cols-[1fr_220px] lg:items-start lg:gap-12">
+        <aside className="mb-8 lg:order-2 lg:mb-0">
+          <Suspense>
+            <BlogTagSidebar tags={tags} totalCount={cmsBlogs.length} />
+          </Suspense>
+        </aside>
 
-      <Suspense>
-        <BlogTabs cmsBlogs={cmsBlogs} tags={tags} featuredId={featured?.id} />
-      </Suspense>
+        <div className="lg:order-1">
+          {/* 最新記事のフィーチャーカード */}
+          {featured && (
+            <Link
+              href={`/blog/${featured.id}`}
+              className="group mb-12 flex flex-col overflow-hidden rounded-3xl border-2 border-[#E4D6C3] bg-[#FFFDF9] transition-shadow hover:shadow-lg"
+            >
+              {featured.eyecatch && (
+                <img
+                  src={`${featured.eyecatch.url}?w=1000&fm=webp`}
+                  alt=""
+                  className="aspect-[1200/630] w-full object-cover"
+                />
+              )}
+              <div className="flex flex-col justify-center p-6 md:p-8">
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="rounded-full bg-[#B37A4C] px-3 py-1 text-xs font-bold text-[#FFFDF9]">
+                    新着
+                  </span>
+                  {featured.publishedAt && (
+                    <time className="text-sm text-[#8A7461]">
+                      {new Date(featured.publishedAt).toLocaleDateString("ja-JP")}
+                    </time>
+                  )}
+                </div>
+                <h2 className="font-display mb-3 text-xl font-bold leading-snug text-[#33261C] transition-colors group-hover:text-[#B37A4C] md:text-2xl">
+                  {featured.title}
+                </h2>
+                {featured.description && (
+                  <p className="line-clamp-3 text-sm leading-relaxed text-[#6E5B4A]">
+                    {featured.description}
+                  </p>
+                )}
+                <span className="mt-4 text-sm font-bold text-[#B37A4C]">
+                  読む →
+                </span>
+              </div>
+            </Link>
+          )}
+
+          <Suspense>
+            <BlogGrid cmsBlogs={cmsBlogs} featuredId={featured?.id} />
+          </Suspense>
+        </div>
+      </div>
 
       <BlogCta />
     </main>
