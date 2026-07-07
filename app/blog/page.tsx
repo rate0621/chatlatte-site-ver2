@@ -85,9 +85,8 @@ export default async function BlogPage() {
                     </time>
                   )}
                 </div>
-                <h2 className="font-display mb-3 text-xl font-bold leading-snug text-[#33261C] transition-colors group-hover:text-[#B37A4C] md:text-2xl">
-                  {featured.title}
-                </h2>
+                {/* タイトルは視覚上はサムネイル画像内にあるため、SEO・支援技術向けにDOMにのみ残す */}
+                <h2 className="sr-only">{featured.title}</h2>
                 {featured.description && (
                   <p className="line-clamp-3 text-sm leading-relaxed text-[#6E5B4A]">
                     {featured.description}
