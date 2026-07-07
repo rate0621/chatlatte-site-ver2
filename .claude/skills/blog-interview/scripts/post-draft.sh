@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # microCMSブログ投稿ヘルパー
-#   categories                                  … カテゴリ一覧（id / name）を表示
-#   post <html> --title T --description D --category ID … 記事を下書きとして投稿
+#   tags                                         … タグ一覧（id / name）を表示
+#   post <html> --title T --description D --tag ID [--tag ID2 ...] … 記事を下書きとして投稿（タグは複数指定可）
 set -euo pipefail
 
 usage() {
   cat <<'USAGE' >&2
 使い方:
-  post-draft.sh categories
-  post-draft.sh post <本文HTMLファイル> --title "タイトル" --description "説明文" --category "カテゴリID"
+  post-draft.sh tags
+  post-draft.sh post <本文HTMLファイル> --title "タイトル" --description "説明文" --tag "タグID" [--tag "タグID2" ...]
   post-draft.sh eyecatch <コンテンツID> <画像ファイル>   # メディアにアップロードしてeyecatchに設定
 USAGE
   exit 1
@@ -32,8 +32,8 @@ BASE="https://${DOMAIN}.microcms.io/api/v1"
 
 cmd="${1:-}"
 case "$cmd" in
-  categories)
-    curl -sf -H "X-MICROCMS-API-KEY: ${API_KEY}" "${BASE}/categories?limit=100" \
+  tags)
+    curl -sf -H "X-MICROCMS-API-KEY: ${API_KEY}" "${BASE}/tags?limit=100" \
       | jq -r '.contents[] | "\(.id)\t\(.name)"'
     ;;
 
@@ -42,25 +42,24 @@ case "$cmd" in
     html_file="${1:-}"; shift || usage
     [[ -f "$html_file" ]] || { echo "本文ファイルが見つかりません: $html_file" >&2; exit 1; }
 
-    title="" description="" category=""
+    title="" description="" tag_ids=()
     while [[ $# -gt 0 ]]; do
       case "$1" in
         --title)       title="$2"; shift 2 ;;
         --description) description="$2"; shift 2 ;;
-        --category)    category="$2"; shift 2 ;;
+        --tag)         tag_ids+=("$2"); shift 2 ;;
         *) usage ;;
       esac
     done
-    [[ -n "$title" && -n "$category" ]] || usage
+    [[ -n "$title" && ${#tag_ids[@]} -gt 0 ]] || usage
 
-    # 注意: 現在のmicroCMSスキーマは title / content / category のみ。
-    # description はスキーマに追加された場合のみ --description で送る
+    tags_json=$(printf '%s\n' "${tag_ids[@]}" | jq -R . | jq -s .)
     body=$(jq -n \
       --arg title "$title" \
       --arg description "$description" \
-      --arg category "$category" \
+      --argjson tags "$tags_json" \
       --rawfile content "$html_file" \
-      '{title: $title, content: $content, category: $category}
+      '{title: $title, content: $content, tags: $tags}
        + (if $description != "" then {description: $description} else {} end)')
 
     response=$(curl -s -w "\n%{http_code}" -X POST \
