@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getBlogList, getBlogDetail, type Blog } from "@/lib/microcms";
 import { BlogCta } from "@/app/components/BlogCta";
+import { BookCard } from "@/app/components/BookCard";
+import { getBookByAsin, mergeBook, type BookInfo } from "@/lib/creators-api";
+import { BOOK_FALLBACKS } from "@/lib/book-fallbacks";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -91,9 +94,51 @@ export default async function BlogDetailPage({
     ? new Date(blog.publishedAt).toISOString().slice(0, 10)
     : "";
 
-  const hasAffiliateLink = /amzn\.to|amazon\.co\.jp|amazon\.com|rakuten\.co\.jp|a8\.net/.test(
-    blog.content
+  const hasAffiliateLink =
+    /amzn\.to|amazon\.co\.jp|amazon\.com|rakuten\.co\.jp|a8\.net|\[\[bookcard:/.test(
+      blog.content
+    );
+
+  // 本文中の [[bookcard:ASIN]] マーカーを書籍カードに差し替える。
+  // マーカーがラップされた <p>…</p> は取り除いてから分割する。
+  const cleanedContent = blog.content.replace(
+    /<p>\s*(\[\[bookcard:[A-Z0-9]{10}\]\])\s*<\/p>/g,
+    "$1"
   );
+  type Segment = { type: "html"; html: string } | { type: "book"; asin: string };
+  const segments: Segment[] = [];
+  const asinSet = new Set<string>();
+  let lastIndex = 0;
+  for (const m of cleanedContent.matchAll(/\[\[bookcard:([A-Z0-9]{10})\]\]/g)) {
+    segments.push({ type: "html", html: cleanedContent.slice(lastIndex, m.index) });
+    segments.push({ type: "book", asin: m[1] });
+    asinSet.add(m[1]);
+    lastIndex = (m.index ?? 0) + m[0].length;
+  }
+  segments.push({ type: "html", html: cleanedContent.slice(lastIndex) });
+
+  // マーカーで参照された各ASINを描画データにする。
+  // 自前フォールバック（書影・書名・著者）を主に、Creators API が使えれば発売日・ランキング等で補完する。
+  const bookEntries = await Promise.all(
+    [...asinSet].map(async (asin): Promise<[string, BookInfo]> => {
+      const info = await getBookByAsin(asin);
+      return [asin, mergeBook(asin, BOOK_FALLBACKS[asin], info)];
+    })
+  );
+  const booksByAsin = new Map(bookEntries);
+
+  const proseClass = `prose prose-lg prose-gray max-w-none space-y-6 text-gray-700
+    prose-headings:text-gray-800 prose-headings:font-bold
+    prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-gray-200
+    prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
+    prose-p:my-4 prose-p:text-gray-700
+    prose-a:text-[#B37A4C] prose-a:no-underline hover:prose-a:underline
+    prose-ul:my-4 prose-ul:pl-6 prose-ul:list-disc prose-li:my-1 prose-li:text-gray-700
+    prose-ol:my-4 prose-ol:pl-6 prose-ol:list-decimal
+    prose-blockquote:border-l-4 prose-blockquote:border-[#B37A4C]/30 prose-blockquote:pl-4 prose-blockquote:text-gray-600 prose-blockquote:italic
+    prose-img:rounded-lg prose-img:my-6 prose-img:mx-auto prose-img:w-auto prose-img:max-h-72
+    prose-strong:text-gray-700 prose-strong:font-semibold
+    [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -203,21 +248,17 @@ export default async function BlogDetailPage({
           </p>
         )}
 
-        <div
-          className="prose prose-lg prose-gray max-w-none space-y-6 text-gray-700
-            prose-headings:text-gray-800 prose-headings:font-bold
-            prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-gray-200
-            prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
-            prose-p:my-4 prose-p:text-gray-700
-            prose-a:text-[#B37A4C] prose-a:no-underline hover:prose-a:underline
-            prose-ul:my-4 prose-ul:pl-6 prose-ul:list-disc prose-li:my-1 prose-li:text-gray-700
-            prose-ol:my-4 prose-ol:pl-6 prose-ol:list-decimal
-            prose-blockquote:border-l-4 prose-blockquote:border-[#B37A4C]/30 prose-blockquote:pl-4 prose-blockquote:text-gray-600 prose-blockquote:italic
-            prose-img:rounded-lg prose-img:my-6
-            prose-strong:text-gray-700 prose-strong:font-semibold
-            [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
-        />
+        {segments.map((seg, i) =>
+          seg.type === "book" ? (
+            <BookCard key={i} book={booksByAsin.get(seg.asin)!} />
+          ) : seg.html.trim() ? (
+            <div
+              key={i}
+              className={proseClass}
+              dangerouslySetInnerHTML={{ __html: seg.html }}
+            />
+          ) : null
+        )}
 
         <aside className="mt-16 border-t border-gray-200 pt-8">
           <div className="flex items-start gap-4 bg-[#FAF6EF] rounded-lg p-6">

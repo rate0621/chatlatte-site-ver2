@@ -10,6 +10,7 @@ usage() {
   post-draft.sh tags
   post-draft.sh post <本文HTMLファイル> --title "タイトル" --description "説明文" --tag "タグID" [--tag "タグID2" ...]
   post-draft.sh eyecatch <コンテンツID> <画像ファイル>   # メディアにアップロードしてeyecatchに設定
+  post-draft.sh upload <画像ファイル>                   # メディアにアップロードしてURLを出力（本文の書影など）
 USAGE
   exit 1
 }
@@ -106,6 +107,18 @@ case "$cmd" in
       echo "❌ eyecatch設定に失敗しました (HTTP ${http_code})" >&2
       exit 1
     fi
+    ;;
+
+  upload)
+    # 画像をmicroCMSメディアにアップロードし、URLをstdoutに出す（記事本文の書影などに使う）
+    shift
+    image="${1:-}"
+    [[ -f "$image" ]] || { echo "画像ファイルが見つかりません: $image" >&2; usage; }
+    media_url=$(curl -sf -X POST -H "X-MICROCMS-API-KEY: ${API_KEY}" \
+      -F "file=@${image}" \
+      "https://${DOMAIN}.microcms-management.io/api/v1/media" | jq -r '.url')
+    [[ -n "$media_url" && "$media_url" != "null" ]] || { echo "❌ アップロードに失敗しました" >&2; exit 1; }
+    echo "$media_url"
     ;;
 
   *) usage ;;
