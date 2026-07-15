@@ -16,12 +16,15 @@ export function BookCard({ book }: { book: BookInfo }) {
         >
           Amazonで見る
         </a>
+        <p className="mt-1 text-xs text-gray-400">
+          PR・Amazonアソシエイトのリンクです
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="not-prose my-8 flex gap-4 rounded-lg border border-[#E4D6C3] border-l-4 border-l-[#B37A4C] bg-white p-4">
+    <div className="not-prose relative my-8 flex gap-4 rounded-lg border border-[#E4D6C3] border-l-4 border-l-[#B37A4C] bg-white p-4 pb-6">
       {book.imageUrl && (
         <a href={book.url} target="_blank" rel={rel} className="shrink-0 self-start">
           {/* Amazonの書影。next/imageの外部ドメイン設定を避けるため素のimgを使う */}
@@ -67,6 +70,9 @@ export function BookCard({ book }: { book: BookInfo }) {
           Amazonで見る
         </a>
       </div>
+      <p className="absolute bottom-2 right-3 text-xs text-gray-400">
+        PR・Amazonアソシエイトのリンクです
+      </p>
     </div>
   );
 }

@@ -94,9 +94,11 @@ export default async function BlogDetailPage({
     ? new Date(blog.publishedAt).toISOString().slice(0, 10)
     : "";
 
-  const hasAffiliateLink =
-    /amzn\.to|amazon\.co\.jp|amazon\.com|rakuten\.co\.jp|a8\.net|\[\[bookcard:/.test(
-      blog.content
+  // 書籍カード（[[bookcard:...]]）は自前で開示を持つため、上部の[PR]バナーは
+  // 「カード以外の本文中アフィリエイトリンク（インラインのamzn.to等）」がある場合のみ出す。
+  const hasInlineAffiliate =
+    /amzn\.to|amazon\.co\.jp|amazon\.com|rakuten\.co\.jp|a8\.net/.test(
+      blog.content.replace(/\[\[bookcard:[A-Z0-9]{10}\]\]/g, "")
     );
 
   // 本文中の [[bookcard:ASIN]] マーカーを書籍カードに差し替える。
@@ -241,7 +243,7 @@ export default async function BlogDetailPage({
           />
         )}
 
-        {hasAffiliateLink && (
+        {hasInlineAffiliate && (
           <p className="mb-8 px-4 py-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-md text-xs leading-relaxed">
             <span className="font-semibold">[PR]</span>{" "}
             本記事にはアフィリエイトリンクが含まれています。リンク経由で購入された場合、運営者が紹介料を受け取ることがあります。
