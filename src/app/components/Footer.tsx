@@ -38,8 +38,11 @@ export function Footer() {
             <Link href="/author/chatlatte" className="text-[#C9B7A4] transition-colors hover:text-white">
               著者プロフィール
             </Link>
-            <Link href="/#contact" className="text-[#C9B7A4] transition-colors hover:text-white">
-              無料相談
+            <Link href="/about" className="text-[#C9B7A4] transition-colors hover:text-white">
+              運営者情報
+            </Link>
+            <Link href="/contact" className="text-[#C9B7A4] transition-colors hover:text-white">
+              お問い合わせ
             </Link>
             <Link href="/privacy-policy" className="text-[#C9B7A4] transition-colors hover:text-white">
               プライバシーポリシー

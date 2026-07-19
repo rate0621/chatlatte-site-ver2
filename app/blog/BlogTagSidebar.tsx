@@ -1,6 +1,3 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 interface TagWithCount {
@@ -12,12 +9,12 @@ interface TagWithCount {
 interface BlogTagSidebarProps {
   readonly tags: readonly TagWithCount[];
   readonly totalCount: number;
+  /** 現在選択中のタグID（未選択は空文字）。サーバーで searchParams から解決して渡す */
+  readonly currentTag: string;
 }
 
-export function BlogTagSidebar({ tags, totalCount }: BlogTagSidebarProps) {
-  const searchParams = useSearchParams();
-  const currentTag = searchParams.get("tag") ?? "";
-
+// サーバーコンポーネント。currentTag を props で受け取り、useSearchParams によるSSRデオプトを避ける。
+export function BlogTagSidebar({ tags, totalCount, currentTag }: BlogTagSidebarProps) {
   const itemClass = (active: boolean) =>
     `flex shrink-0 items-center justify-between gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors cursor-pointer lg:w-full lg:rounded-lg lg:px-3 ${
       active

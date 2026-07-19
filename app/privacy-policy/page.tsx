@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
           <ul className="list-none space-y-2">
             <li><span className="font-medium text-gray-800">運営：</span>chatlatte</li>
             <li><span className="font-medium text-gray-800">所在地：</span>山形県</li>
-            <li><span className="font-medium text-gray-800">お問い合わせ：</span><Link href="/#contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link></li>
+            <li><span className="font-medium text-gray-800">お問い合わせ：</span><Link href="/contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link></li>
           </ul>
         </section>
 
@@ -85,7 +85,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">7. お問い合わせ</h2>
           <p>
             当サイトの個人情報の取り扱いに関するお問い合わせは、
-            <Link href="/#contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link>
+            <Link href="/contact" className="text-[#B37A4C] hover:underline">お問い合わせフォーム</Link>
             よりご連絡ください。
           </p>
         </section>

@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { getBlogList } from "@/lib/microcms";
 import { BlogTagSidebar } from "./BlogTagSidebar";
@@ -30,7 +29,14 @@ function extractTagsWithCount(
   return [...tagMap.values()].sort((a, b) => b.count - a.count);
 }
 
-export default async function BlogPage() {
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
+  const { tag } = await searchParams;
+  const currentTag = tag ?? "";
+
   let cmsBlogs: Awaited<ReturnType<typeof getBlogList>>["contents"] = [];
 
   try {
@@ -41,7 +47,8 @@ export default async function BlogPage() {
   }
 
   const tags = extractTagsWithCount(cmsBlogs);
-  const featured = cmsBlogs[0];
+  // タグ未選択のときだけ最新記事をフィーチャー表示する（タグ選択時は一覧に集約）
+  const featured = currentTag === "" ? cmsBlogs[0] : undefined;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
@@ -55,9 +62,11 @@ export default async function BlogPage() {
 
       <div className="lg:grid lg:grid-cols-[1fr_220px] lg:items-start lg:gap-12">
         <aside className="mb-8 lg:order-2 lg:mb-0">
-          <Suspense>
-            <BlogTagSidebar tags={tags} totalCount={cmsBlogs.length} />
-          </Suspense>
+          <BlogTagSidebar
+            tags={tags}
+            totalCount={cmsBlogs.length}
+            currentTag={currentTag}
+          />
         </aside>
 
         <div className="lg:order-1">
@@ -77,13 +86,16 @@ export default async function BlogPage() {
                 </div>
               )}
               <div className="flex flex-1 flex-col justify-between gap-4 p-6 md:p-8">
-                {/* タイトルは視覚上はサムネイル画像内にあるため、SEO・支援技術向けにDOMにのみ残す */}
-                <h2 className="sr-only">{featured.title}</h2>
-                {featured.description && (
-                  <p className="line-clamp-4 text-sm leading-relaxed text-[#6E5B4A]">
-                    {featured.description}
-                  </p>
-                )}
+                <div>
+                  <h2 className="text-xl font-bold leading-snug text-[#33261C] transition-colors group-hover:text-[#B37A4C] md:text-2xl">
+                    {featured.title}
+                  </h2>
+                  {featured.description && (
+                    <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-[#6E5B4A]">
+                      {featured.description}
+                    </p>
+                  )}
+                </div>
                 {featured.publishedAt && (
                   <time className="self-end text-sm text-[#8A7461]">
                     {new Date(featured.publishedAt).toLocaleDateString("ja-JP")}
@@ -93,9 +105,11 @@ export default async function BlogPage() {
             </Link>
           )}
 
-          <Suspense>
-            <BlogGrid cmsBlogs={cmsBlogs} featuredId={featured?.id} />
-          </Suspense>
+          <BlogGrid
+            cmsBlogs={cmsBlogs}
+            featuredId={featured?.id}
+            currentTag={currentTag}
+          />
         </div>
       </div>
 
