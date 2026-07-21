@@ -172,12 +172,58 @@ export default async function BlogDetailPage({
     },
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "ホーム",
+        item: "https://www.chatlatte.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "ブログ",
+        item: "https://www.chatlatte.com/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: blog.title,
+        item: `https://www.chatlatte.com/blog/${slug}`,
+      },
+    ],
+  };
+
   return (
     <main className="max-w-3xl mx-auto px-6 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <nav aria-label="パンくずリスト" className="mb-6 text-sm text-gray-500">
+        <ol className="flex flex-wrap items-center gap-1.5">
+          <li>
+            <Link href="/" className="transition-colors hover:text-[#B37A4C]">
+              ホーム
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <Link href="/blog" className="transition-colors hover:text-[#B37A4C]">
+              ブログ
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li className="line-clamp-1 text-gray-700">{blog.title}</li>
+        </ol>
+      </nav>
       <article>
         <header className="mb-10">
           <div className="flex items-center gap-3 mb-2">
