@@ -11,6 +11,16 @@ export type BookFallback = {
 };
 
 export const BOOK_FALLBACKS: Record<string, BookFallback> = {
+  // エッセンシャル思考（グレッグ・マキューン）
+  B00QQKCV6E: {
+    title: "エッセンシャル思考 最少の時間で成果を最大にする",
+    author: "グレッグ・マキューン",
+    publisher: "かんき出版",
+    imageUrl:
+      "https://images.microcms-assets.io/assets/8134d092733d41bca2593ee72c2de00b/9a22df6aa7b44dacadd2d0016558baf0/cover.png",
+    url: "https://amzn.to/3OISCLy",
+  },
+
   // GIVE & TAKE（アダム・グラント）
   "4837957463": {
     title: "GIVE & TAKE 「与える人」こそ成功する時代",
