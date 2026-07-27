@@ -139,6 +139,8 @@ export default async function BlogDetailPage({
     prose-ol:my-4 prose-ol:pl-6 prose-ol:list-decimal
     prose-blockquote:border-l-4 prose-blockquote:border-[#B37A4C]/30 prose-blockquote:pl-4 prose-blockquote:text-gray-600 prose-blockquote:italic
     prose-img:rounded-lg prose-img:my-6 prose-img:mx-auto prose-img:w-auto prose-img:max-h-72
+    prose-figure:my-6 prose-figure:mx-auto prose-figure:w-fit [&_figure_img]:my-0
+    prose-figcaption:mt-2 prose-figcaption:text-center prose-figcaption:text-sm prose-figcaption:text-gray-500
     prose-strong:text-gray-700 prose-strong:font-semibold
     [&_br+br]:block [&_br+br]:content-[''] [&_br+br]:mt-4`;
 
