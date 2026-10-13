@@ -105,6 +105,21 @@ description: テーマを決めてAIがインタビューし、回答からブ�
 - **改稿時**：既存下書きは `PATCH ${BASE}/blogs/<コンテンツID>` で上書き更新する（APIキーにPATCH権限あり・疎通確認済み）。新規下書きを乱立させない
 - 401/403で失敗した場合：`.env` に `MICROCMS_WRITE_API_KEY`（POST権限付きAPIキー）を設定してもらう（2026-07時点では既存の `MICROCMS_API_KEY` にPOST権限があり、そのまま動作確認済み）
 
+### Phase 5.1: 本番URLでの下書きプレビュー（2026-10-13追加）
+
+下書き投稿後、本人には**本番サイトそのもののプレビューURL**を渡す（Artifactや模造プレビューは本人がNG）。
+
+- URL形式：`https://www.chatlatte.com/blog/preview/<コンテンツID>?draftKey=<DRAFT_KEY>`（`app/blog/preview/[slug]/page.tsx`。force-dynamic・noindex。コンテンツAPIキーで下書きを取得する）
+- **draftKey の取り方**：マネジメントAPIからは取れない（GET contents は権限不足で403）。microCMS管理画面の記事ページ（`https://chatlatte.microcms.io/apis/blogs/<ID>`）で「APIプレビュー」を開くとリクエスト例に `draftKey` が出る。ブラウザ操作ツール（claude-in-chrome）で開いて `find` で "draftKey" を探せば取得できる。将来は管理画面の「画面プレビュー」設定に上記URL形式を登録しておくと、管理画面のボタンからも開ける
+- 新しい記事ごとに draftKey は異なる。改稿（PATCH）してもキーは変わらない
+- 本人が「OK」を出したら Phase 5.2 へ
+
+### Phase 5.2: 公開とデプロイ（本人の「OK」後のみ）
+
+- 公開ステータス変更：`PATCH https://chatlatte.microcms-management.io/api/v1/contents/blogs/<ID>/status` body `{"status":["PUBLISH"]}`（`X-MICROCMS-API-KEY` は既存キー。2026-10-13に本人がステータス変更権限を付与）。**本人の明示的なOKなしに叩かない**
+- 再デプロイ：git push（GitHub連携でVercelが自動ビルド。約1分）。Deploy Hookは未設定
+- デプロイ後 `https://www.chatlatte.com/blog/<ID>` が200を返すことを確認してからX投稿へ
+
 ### Phase 5.5: X版の生成
 
 下書き投稿が済んだら、記事のX（Twitter）用再編集版を `docs/interviews/<slug>-x.md` に出力する。**全文転載は禁止**（サイトへの訪問理由が消える＋SEOでX側が勝ってしまうため）。
