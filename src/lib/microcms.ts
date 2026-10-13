@@ -48,9 +48,18 @@ export async function getBlogList(queries?: {
 }
 
 // ブログ記事を1件取得
-export async function getBlogDetail(contentId: string) {
+// draftKey を渡したときだけ下書き（非公開）コンテンツを取得する。
+// 未指定時は従来どおり公開コンテンツのみを返すため、既存の呼び出しは無変更で動く。
+export async function getBlogDetail(
+  contentId: string,
+  queries?: { readonly draftKey?: string }
+) {
+  const draftKey = queries?.draftKey;
+
   return client.getListDetail<Blog>({
     endpoint: "blogs",
     contentId,
+    // draftKey が無いときは queries 自体を付けない（イミュータブルに条件付きで合成）
+    ...(draftKey ? { queries: { draftKey } } : {}),
   });
 }
